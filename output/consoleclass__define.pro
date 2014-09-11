@@ -14,8 +14,10 @@ End
 Function consoleclass::init, _extra = console_options
 
   Compile_opt idl2
-print, console_options
-  ; default mode
+  
+;print, console_options
+;print, tag_names(console_options)
+; default mode
 ;  if Keyword_set(default) then self.Consolesetup = 0
 
 if n_elements(console_options) gt 0 then begin
@@ -48,6 +50,9 @@ if n_elements(console_options) gt 0 then begin
   
       end
       
+      ; Added to avoid any warning output in the log file as it will look for this tag
+      strlowcase(tag) eq 'log':
+      
       ; Enable quiet mode
       strlowcase(tag) eq 'quiet' : begin
         self.print, 2, 'Quiet mode enable'
@@ -56,7 +61,10 @@ if n_elements(console_options) gt 0 then begin
         
       end
       
-      else : self.print, 2, 'Unknown case, moving on...'
+      else : begin
+        self.print, 2, "Was looking for statement " + tag
+        self.print, 2, 'Unknown case, moving on...'
+      end
       
     endcase
 
@@ -164,7 +172,7 @@ End
 
 
 ; Function to output information on console
-Pro consoleclass::printLUT, code, array
+Pro consoleclass::printLUT, code, array, thres
 
   flag = 0
 
@@ -173,7 +181,7 @@ Pro consoleclass::printLUT, code, array
   ;ERROR   :: -> code 3
   codeString = ["::","INFO","WARNING","ERROR"]
 
-  invalid = where(abs(array) ge 1.e+2, /NULL)
+  invalid = where(array eq thres, /NULL)
   
   ; Converting array to string array
   array = string(array)
@@ -190,7 +198,7 @@ Pro consoleclass::printLUT, code, array
 
     case self.Consolesetup of
       0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
-      1:Printf, self.Consolelun, codeString[code], codeString[0], stringArray, FORMAT = stringFormat
+      1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
       2:
     endcase
   
