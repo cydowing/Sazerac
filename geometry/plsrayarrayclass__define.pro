@@ -1,8 +1,8 @@
 Pro plsrayarrayclass__define
 
   void = {plsrayarrayclass, $
-    origin    : pointarrayclass,$
-    direction : vectorarrayclass,$
+    origin    : pointarrayclass(),$
+    direction : vectorarrayclass(),$
     mint      : 0.D,$
     maxt      : 0.D,$
     time      : 0.D,$

@@ -61,9 +61,12 @@ if n_elements(console_options) gt 0 then begin
         
       end
       
+      strlowcase(tag) eq 'verbose': self.print, 2, 'verbose mode enable'
+      
+      
       else : begin
-        self.print, 2, "Was looking for statement " + tag
-        self.print, 2, 'Unknown case, moving on...'
+;        self.print, 2, "Was looking at statement " + tag
+;        self.print, 2, 'Unknown case for consoleclass, moving on...'
       end
       
     endcase

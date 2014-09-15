@@ -257,10 +257,27 @@ end
 Function vectorarrayclass::normalizeLength
 
   inv = 1. / self.length()
-  (*self.pt) *= inv
+  dinv = [[inv],[inv],[inv]]
+  (*self.pt) *= dinv
+  dinv = !NULL
   return, 1
   
 End
+
+
+
+
+Function vectorarrayclass::normalizeLengthBy, value
+
+  inv = 1. / value
+  dinv = replicate(inv, self.column, self.row)
+  (*self.Pt) *= dinv
+  dinv = !NULL
+  Return, 1
+
+End
+
+
 
 
 Function vectorarrayclass::getNormLength
