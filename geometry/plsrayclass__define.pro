@@ -1,8 +1,8 @@
 Pro plsrayclass__define
 
   void = {plsrayclass, $
-    origin    : pointclass(),$
-    direction : vectorclass(),$
+    origin    : pointclass,$
+    direction : vectorclass,$
     mint      : 0.D,$
     maxt      : 0.D,$
     time      : 0.D,$

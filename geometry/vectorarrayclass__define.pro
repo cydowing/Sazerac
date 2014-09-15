@@ -2,7 +2,7 @@ Pro vectorarrayclass__define
 
   void = {vectorarrayclass, $
     pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
-    column   : 0         ,$  ; number of columns in the array
+    column   : 0UL       ,$  ; number of columns in the array
     row      : 0          $  ; number of rows in the array
   }
   
@@ -20,7 +20,7 @@ Function vectorarrayclass::init, cox, coy, coz
   case n_params() of
     0 : begin
           self.pt = ptr_new(/allocate_heap)
-          self.column = 0
+          self.column = 0UL
           self.row = 0
         end
     1 : begin
@@ -32,7 +32,7 @@ Function vectorarrayclass::init, cox, coy, coz
               print, 'Make sure that one of the dimension is 3...'
               return, 0
             endif else begin
-            dum = where(size(cox,/dimensions) eq 3, count, complement = comp)
+            dum = where(size(cox,/dimensions) eq 3, count, complement = comp, /L64)
             if count eq 0 then begin
               print, 'Wrong size of input data...'
               print, 'Make sure that one of the dimension is 3...'
@@ -254,10 +254,11 @@ Function vectorarrayclass::squareLength
 end
 
 
-Pro vectorarrayclass::normalizeLength
+Function vectorarrayclass::normalizeLength
 
   inv = 1. / self.length()
   (*self.pt) *= inv
+  return, 1
   
 End
 

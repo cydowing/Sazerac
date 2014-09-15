@@ -1,8 +1,8 @@
 Pro plsrayarrayclass__define
 
   void = {plsrayarrayclass, $
-    origin    : pointarrayclass(),$
-    direction : vectorarrayclass(),$
+    origin    : pointarrayclass,$
+    direction : vectorarrayclass,$
     mint      : 0.D,$
     maxt      : 0.D,$
     time      : 0.D,$
@@ -18,17 +18,17 @@ Function plsrayarrayclass::init, orig, dir, mint, maxt
   
   case n_params() of
     0: begin
-        self.origin = pointclass()
-        self.direction = vectorclass()
+        self.origin = pointarrayclass()
+        self.direction = vectorarrayclass()
       end
     1: begin
-      if strlowcase(obj_class(orig)) eq 'vectorclass' then begin
-          self.origin = pointclass()
+      if strlowcase(obj_class(orig)) eq 'vectorarrayclass' then begin
+          self.origin = pointarrayclass()
           self.direction = orig
       endif 
-      if strlowcase(obj_class(orig)) eq 'pointclass' then begin
+      if strlowcase(obj_class(orig)) eq 'pointarrayclass' then begin
           self.origin = orig
-          self.direction = vectorclass()
+          self.direction = vectorarrayclass()
       endif
       end
     2: begin
@@ -172,6 +172,6 @@ Function plsrayarrayclass::traceRay, t
 ;  print, (self.origin).xyz()
 ;  print, (self.direction).xyz()
   temp = [ (self.origin).xyz() + (replicate(t,3) * (self.direction).xyz() ) ]
-  return, pointclass( temp )
+  return, pointarrayclass( temp )
 
 End
