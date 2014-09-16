@@ -250,4 +250,9 @@ Pro consoleclass::printLUT, code, array, thres
 
 End
 
+Pro consoleclass::printsep
+
+self.print,1,'========================================================='
+
+End
 
