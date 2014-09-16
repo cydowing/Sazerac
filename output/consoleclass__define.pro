@@ -188,26 +188,71 @@ Pro consoleclass::printLUT, code, array, thres
   
   ; Converting array to string array
   array = string(array)
+  nArray = n_elements(array)
   
   ; substitution of invalid value
   if invalid ne !NULL then array[invalid] = '       empty'  ; Here we add 8-1 space in front of empty to align string
   
-  ; Counting the number of line to 
-  n = N_elements(Array) / 8
+  ; Counting the number of line to
+  modulo = narray mod 8.
+  divNArray = narray / 8
+  if modulo eq 0 then begin
+    
+    array = reform(array, 8, divNArray)
+    n = divNArray
   
-  for i=0,n-1 do begin
-      
-    stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+    for i=0,n-1 do begin
+        
+      stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+  
+      case self.Consolesetup of
+        0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
+        1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
+        2:
+      endcase
+    
+    endfor
+    
+  endif else begin
+
+    templ = strarr(divNArray*8)
+    templ[0] = array[0:(divNArray*8)-1]
+    tempr = array[divNArray*8:*]
+    
+    array = Reform(templ, 8, divNArray)
+    n = divNArray
+
+    for i=0,n-1 do begin
+
+      stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+
+      case self.Consolesetup of
+        0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
+        1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
+        2:
+      endcase
+
+    endfor
+    
+    ; Printing the last line
+    stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+ '(' + String(n_elements(tempr)) + 'a-12, :, " | "))'
 
     case self.Consolesetup of
-      0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
-      1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
+      0:Print, FORMAT = stringFormat, codeString[code], codeString[0], tempr
+      1:Printf, self.Consolelun, codeString[code], codeString[0], tempr, FORMAT = stringFormat
       2:
     endcase
-  
-  endfor
+
+    
+    
+  endelse
 
 
 End
 
+Pro consoleclass::printsep
+
+self.print,1,'========================================================='
+
+End
 
