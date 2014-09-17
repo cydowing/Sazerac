@@ -3,6 +3,7 @@ Pro consoleclass__define
 ; Definition of the data hold by the object
 void = {consoleclass, $
   consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
+  previousMode     :0B,$
   logPath          :'', $             ; Path the to log file
   consoleLun       :0B  $             ; Path to the LAS file
   }
@@ -253,6 +254,23 @@ End
 Pro consoleclass::printsep
 
 self.print,1,'========================================================='
+
+End
+
+
+Function consoleclass::setMode, val
+
+self.previousMode = self.consoleSetup
+self.consoleSetup = val
+return, 1
+
+End
+
+
+Function consoleclass::restoreMode
+
+  self.Consolesetup = self.Previousmode
+  Return, 1
 
 End
 
