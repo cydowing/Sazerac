@@ -3,6 +3,7 @@ Pro consoleclass__define
 ; Definition of the data hold by the object
 void = {consoleclass, $
   consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
+  previousMode     :0B,$
   logPath          :'', $             ; Path the to log file
   consoleLun       :0B  $             ; Path to the LAS file
   }
@@ -14,8 +15,10 @@ End
 Function consoleclass::init, _extra = console_options
 
   Compile_opt idl2
-print, console_options
-  ; default mode
+  
+;print, console_options
+;print, tag_names(console_options)
+; default mode
 ;  if Keyword_set(default) then self.Consolesetup = 0
 
 if n_elements(console_options) gt 0 then begin
@@ -48,6 +51,9 @@ if n_elements(console_options) gt 0 then begin
   
       end
       
+      ; Added to avoid any warning output in the log file as it will look for this tag
+      strlowcase(tag) eq 'log':
+      
       ; Enable quiet mode
       strlowcase(tag) eq 'quiet' : begin
         self.print, 2, 'Quiet mode enable'
@@ -56,7 +62,13 @@ if n_elements(console_options) gt 0 then begin
         
       end
       
-      else : self.print, 2, 'Unknown case, moving on...'
+      strlowcase(tag) eq 'verbose': self.print, 2, 'verbose mode enable'
+      
+      
+      else : begin
+;        self.print, 2, "Was looking at statement " + tag
+;        self.print, 2, 'Unknown case for consoleclass, moving on...'
+      end
       
     endcase
 
@@ -164,7 +176,7 @@ End
 
 
 ; Function to output information on console
-Pro consoleclass::printLUT, code, array
+Pro consoleclass::printLUT, code, array, thres
 
   flag = 0
 
@@ -173,30 +185,92 @@ Pro consoleclass::printLUT, code, array
   ;ERROR   :: -> code 3
   codeString = ["::","INFO","WARNING","ERROR"]
 
-  invalid = where(abs(array) ge 1.e+2, /NULL)
+  invalid = where(array eq thres, /NULL)
   
   ; Converting array to string array
   array = string(array)
+  nArray = n_elements(array)
   
   ; substitution of invalid value
   if invalid ne !NULL then array[invalid] = '       empty'  ; Here we add 8-1 space in front of empty to align string
   
-  ; Counting the number of line to 
-  n = N_elements(Array) / 8
+  ; Counting the number of line to
+  modulo = narray mod 8.
+  divNArray = narray / 8
+  if modulo eq 0 then begin
+    
+    array = reform(array, 8, divNArray)
+    n = divNArray
   
-  for i=0,n-1 do begin
-      
-    stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+    for i=0,n-1 do begin
+        
+      stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+  
+      case self.Consolesetup of
+        0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
+        1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
+        2:
+      endcase
+    
+    endfor
+    
+  endif else begin
+
+    templ = strarr(divNArray*8)
+    templ[0] = array[0:(divNArray*8)-1]
+    tempr = array[divNArray*8:*]
+    
+    array = Reform(templ, 8, divNArray)
+    n = divNArray
+
+    for i=0,n-1 do begin
+
+      stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+'(8a-12, :, " | "))'
+
+      case self.Consolesetup of
+        0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
+        1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
+        2:
+      endcase
+
+    endfor
+    
+    ; Printing the last line
+    stringFormat= '(a-7,tr1,a2,tr3,'+String(n)+ '(' + String(n_elements(tempr)) + 'a-12, :, " | "))'
 
     case self.Consolesetup of
-      0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
-      1:Printf, self.Consolelun, codeString[code], codeString[0], stringArray, FORMAT = stringFormat
+      0:Print, FORMAT = stringFormat, codeString[code], codeString[0], tempr
+      1:Printf, self.Consolelun, codeString[code], codeString[0], tempr, FORMAT = stringFormat
       2:
     endcase
-  
-  endfor
+
+    
+    
+  endelse
 
 
 End
 
+Pro consoleclass::printsep
+
+self.print,1,'========================================================='
+
+End
+
+
+Function consoleclass::setMode, val
+
+self.previousMode = self.consoleSetup
+self.consoleSetup = val
+return, 1
+
+End
+
+
+Function consoleclass::restoreMode
+
+  self.Consolesetup = self.Previousmode
+  Return, 1
+
+End
 
