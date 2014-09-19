@@ -1,11 +1,12 @@
 Pro plsrayclass__define
 
   void = {plsrayclass, $
-    origin    : pointclass,$
-    direction : vectorclass,$
-    mint      : 0.D,$
-    maxt      : 0.D,$
-    time      : 0.D,$
+    origin    : pointclass,$        ; Origin of the pluse = Anchor point
+    direction : vectorclass,$       ; Direction of the pulse = Normalized Anchor to Target vector
+    outX      : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
+    outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
+    inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
+    inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
     depth     : 0B $
   }
   
