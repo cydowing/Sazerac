@@ -37,7 +37,7 @@ if n_elements(console_options) gt 0 then begin
         logfield = where(strlowcase(tags) eq 'log', /NULL)
         
         if logfield ne !NULL then begin
-          self.Logpath = console_options.log
+          self.Logpath = console_options.file
         endif else begin
           self.print, 2, 'No log file name specified...'
           self.print, 2, "The output log name is set to 'idl_console_output.log' and will be located in user's directory..."
