@@ -1,17 +1,3 @@
-Pro consoleclass__define
-
-; Definition of the data hold by the object
-void = {consoleclass, $
-  consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
-  previousMode     :0B,$
-  logPath          :'', $             ; Path the to log file
-  consoleLun       :0B  $             ; Path to the LAS file
-  }
-  
-End
-
-
-
 Function consoleclass::init, _extra = console_options
 
   Compile_opt idl2
@@ -273,4 +259,21 @@ Function consoleclass::restoreMode
   Return, 1
 
 End
+
+
+
+Pro consoleclass__define
+
+  ; Definition of the data hold by the object
+  void = {consoleclass, $
+    consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
+    previousMode     :0B,$
+    logPath          :'', $             ; Path the to log file
+    consoleLun       :0B  $             ; Path to the LAS file
+  }
+
+End
+
+
+
 

@@ -1,57 +1,15 @@
-Pro plsrayclass__define
-
-  void = {plsrayclass, $
-    origin    : pointclass,$        ; Origin of the pluse = Anchor point
-    direction : vectorclass,$       ; Direction of the pulse = Normalized Anchor to Target vector
-    outX      : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
-    outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
-    inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
-    inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
-    depth     : 0B $
-  }
-  
-End
-
-
-Function plsrayclass::init, orig, dir, mint, maxt
+;Function plsrayclass::init, orig, dir, mint, maxt
+Function plsrayclass::init, orig, dir, pulse
 
   Compile_opt idl2
   
-  case n_params() of
-    0: begin
-        self.origin = pointclass()
-        self.direction = vectorclass()
-      end
-    1: begin
-      if strlowcase(obj_class(orig)) eq 'vectorclass' then begin
-          self.origin = pointclass()
-          self.direction = orig
-      endif 
-      if strlowcase(obj_class(orig)) eq 'pointclass' then begin
-          self.origin = orig
-          self.direction = vectorclass()
-      endif
-      end
-    2: begin
-      ;print, '2 arguments found...' 
-      self.origin = orig
-      self.direction = dir
-      end
-    3: begin
-      ;print, '3 arguments found...'
-      self.origin = orig
-      self.direction = dir
-      self.mint = mint
-    end
-    4: begin
-      ;print, '4 arguments found...'
-      self.origin = orig
-      self.direction = dir
-      self.mint = mint
-      self.maxt = maxt
-    end
-    else: print, 'Hummm... something went wrong...'
-  endcase
+  self.origin = orig
+  self.direction = dir
+  self.n = pulse.n
+  self.pulse = pulse.pulse
+  self.durAnchor = pulse.durationFromAnchor
+  self.luTable = pulse.lut
+ 
   
   ; Initializing the object
   return, 1
@@ -176,3 +134,24 @@ Function plsrayclass::traceRay, t
   return, pointclass( temp )
 
 End
+
+
+
+Pro plsrayclass__define
+
+  void = {plsrayclass, $
+    origin    : pointclass(),$        ; Origin of the pluse = Anchor point
+    direction : vectorclass(),$       ; Direction of the pulse = Normalized Anchor to Target vector
+    n         : ptr_new(),$         ; Pointer to the number of samples per pulse segment,  concatenated into an single array
+    pulse     : ptr_new(),$         ; Pointer to the wavefrom values concatenated together
+    durAnchor : ptr_new(),$         ; Pointer to the Duration from Anchor values, concatenated into an single array
+    luTable   : ptr_new(),$         ; Pointer to the lookup table for the pulse
+    outX      : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
+    outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
+    inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
+    inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
+    depth     : 0B $
+  }
+
+End
+

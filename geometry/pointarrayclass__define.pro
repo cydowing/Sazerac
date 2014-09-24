@@ -1,14 +1,3 @@
-Pro pointarrayclass__define
-
-  void = {pointarrayclass, $
-    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
-    column   : 0UL        ,$  ; number of columns in the array
-    row      : 0          $  ; number of rows in the array
-  }
-  
-End
-
-
 Function pointarrayclass::init, cox, coy, coz
 
   Compile_opt idl2
@@ -332,4 +321,17 @@ Function pointarrayclass::transformTo2D
   return, 1
   
 End
+
+
+
+Pro pointarrayclass__define
+
+  void = {pointarrayclass, $
+    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
+    column   : 0UL        ,$  ; number of columns in the array
+    row      : 0          $  ; number of rows in the array
+  }
+
+End
+
 

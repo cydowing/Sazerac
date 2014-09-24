@@ -1,14 +1,3 @@
-Pro vector2Darrayclass__define
-
-  void = {vector2Darrayclass, $
-    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,2)
-    column   : 0         ,$  ; number of columns in the array
-    row      : 0          $  ; number of rows in the array
-  }
-  
-End
-
-
 ;+
 ; To be revisited for a better handle or initialisation
 ; possibility to initialize directly with a vector2Darrayclass argument
@@ -338,5 +327,17 @@ Function vector2Darrayclass::localCoordinateSystem
   ; with this line the actual vector objects are return - most likely more efficient
   return, [ v2, v3 ]
   
+End
+
+
+
+Pro vector2Darrayclass__define
+
+  void = {vector2Darrayclass, $
+    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,2)
+    column   : 0         ,$  ; number of columns in the array
+    row      : 0          $  ; number of rows in the array
+  }
+
 End
 

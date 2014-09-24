@@ -1,15 +1,3 @@
-Pro vectorclass__define
-
-  void = {vectorclass, $
-    vx    : 0.D ,$
-    vy    : 0.D ,$
-    vz    : 0.D ,$
-    inherits IDL_Object $
-  }
-  
-End
-
-
 ;+
 ; To be revisited for a better handle or initialisation
 ; possibility to initialize directly with a vectorclass argument
@@ -226,6 +214,18 @@ Pro vectorclass::normalizeLength
 End
 
 
+
+Function vectorclass::normalizeLengthBy, value
+
+  inv = 1. / value
+  self.vx *= inv
+  self.vy *= inv
+  self.vz *= inv
+  Return, 1
+
+End
+
+
 Function vectorclass::getNormLength
 
   inv = 1. / self.length()
@@ -315,3 +315,17 @@ Function vectorclass::duplicateToVectorArrayClass, nDim
     endelse
 
 End
+
+
+
+Pro vectorclass__define
+
+  void = {vectorclass, $
+    vx    : 0.D ,$
+    vy    : 0.D ,$
+    vz    : 0.D ,$
+    inherits IDL_Object $
+  }
+
+End
+

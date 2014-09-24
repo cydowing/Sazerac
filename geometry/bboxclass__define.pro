@@ -1,13 +1,3 @@
-Pro bboxclass__define
-
-  void = {bboxclass, $
-    ptMin   : pointclass ,$
-    ptMax   : pointclass $
-  }
-  
-End
-
-
 Function bboxclass::init, inOne, inTwo
 
   Compile_opt idl2
@@ -304,4 +294,16 @@ Function bboxclass::intersectP, ray, hitt0, hitt1
   endfor
 
 End
+
+
+
+Pro bboxclass__define
+
+  void = {bboxclass, $
+    ptMin   : pointclass ,$
+    ptMax   : pointclass $
+  }
+
+End
+
 

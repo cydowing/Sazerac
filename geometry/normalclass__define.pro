@@ -1,14 +1,3 @@
-Pro normalclass__define
-
-  void = {normalclass, $
-    vx    : 0. ,$
-    vy    : 0. ,$
-    vz    : 0. $
-  }
-  
-End
-
-
 Function normalclass::init, cox, coy, coz
 
   Compile_opt idl2
@@ -235,5 +224,16 @@ Function normalclass::localCoordinateSystem
   ; with this line the actual vector objects are return - most likely more efficient
   return, [ v2, v3 ]
   
+End
+
+
+Pro normalclass__define
+
+  void = {normalclass, $
+    vx    : 0. ,$
+    vy    : 0. ,$
+    vz    : 0. $
+  }
+
 End
 

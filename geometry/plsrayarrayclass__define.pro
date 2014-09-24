@@ -1,17 +1,3 @@
-Pro plsrayarrayclass__define
-
-  void = {plsrayarrayclass, $
-    origin    : pointarrayclass(),$
-    direction : vectorarrayclass(),$
-    mint      : 0.D,$
-    maxt      : 0.D,$
-    time      : 0.D,$
-    depth     : 0B $
-  }
-  
-End
-
-
 Function plsrayarrayclass::init, orig, dir, mint, maxt
 
   Compile_opt idl2
@@ -175,3 +161,19 @@ Function plsrayarrayclass::traceRay, t
   return, pointarrayclass( temp )
 
 End
+
+
+
+Pro plsrayarrayclass__define
+
+  void = {plsrayarrayclass, $
+    origin    : pointarrayclass(),$
+    direction : vectorarrayclass(),$
+    mint      : 0.D,$
+    maxt      : 0.D,$
+    time      : 0.D,$
+    depth     : 0B $
+  }
+
+End
+

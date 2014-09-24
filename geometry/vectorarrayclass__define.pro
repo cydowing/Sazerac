@@ -1,14 +1,3 @@
-Pro vectorarrayclass__define
-
-  void = {vectorarrayclass, $
-    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
-    column   : 0UL       ,$  ; number of columns in the array
-    row      : 0          $  ; number of rows in the array
-  }
-  
-End
-
-
 ;+
 ; To be revisited for a better handle or initialisation
 ; possibility to initialize directly with a vectorarrayclass argument
@@ -410,5 +399,17 @@ Function vectorarrayclass::localCoordinateSystem
   ; with this line the actual vector objects are return - most likely more efficient
   return, [ v2, v3 ]
   
+End
+
+
+
+Pro vectorarrayclass__define
+
+  void = {vectorarrayclass, $
+    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
+    column   : 0UL       ,$  ; number of columns in the array
+    row      : 0          $  ; number of rows in the array
+  }
+
 End
 
