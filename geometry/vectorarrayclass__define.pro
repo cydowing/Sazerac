@@ -403,6 +403,18 @@ End
 
 
 
+Function vectorarrayclass::getSubArray, index
+
+  Return, vectorarrayclass($
+                  (*self.Pt)[index,0],$
+                  (*self.Pt)[index,1],$
+                  (*self.Pt)[index,2] $
+                  )
+
+End
+
+
+
 Pro vectorarrayclass__define
 
   void = {vectorarrayclass, $

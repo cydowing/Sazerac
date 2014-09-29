@@ -137,6 +137,38 @@ End
 
 
 
+Function plsrayclass::findSimilarRay, rayArr, $
+  THRESDIST = THRESDIST, $
+  THRESANGL = THRESANGL
+
+  ; Find the closest anchor point rays
+  if Keyword_set(THRESDIST) then distance = THRESDIST else distance = 1.
+  if Keyword_set(THRESANGL) then angle = THRESANGL else angle = 5. * !DTOR
+
+  oriArr = rayArr.getOrigin()
+  dirArr = rayArr.getDirection()
+  
+  anchor = self.origin
+  anchorArr = anchor.duplicateToPointArrayClass(oriArr.getDim())
+  pointDist = anchorArr.distance(oriArr)
+
+  dID = Where(pointDist le distance, /NULL)
+  
+  direction = dirArr.getSubArray(dID)
+  rayDirection = self.getDirection()
+  angleArr = direction.getRadAngle(rayDirection)
+  
+  dID = Where(angleARr le angle, /NULL)
+  
+    
+  return, 1
+
+End
+
+
+
+
+
 Pro plsrayclass__define
 
   void = {plsrayclass, $
