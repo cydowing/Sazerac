@@ -1,4 +1,3 @@
-;Function plsrayclass::init, orig, dir, mint, maxt
 Function plsrayclass::init, orig, dir, pulse
 
   Compile_opt idl2
@@ -42,36 +41,30 @@ Function plsrayclass::setDirection, vector2
 End
 
 
-Function plsrayclass::setMint, value
+Function plsrayclass::setDurAnchor, value
 
-  self.mint = value
+  self.durAnchor = value
   return, 1
   
 End
 
 
-Function plsrayclass::setMaxt, value
+Function plsrayclass::setLuTable, value
 
-  self.maxt = value
+  self.luTable = value
   return, 1
   
 End
 
 
-Function plsrayclass::setTime, value
 
-  self.time = value
-  return, 1
-  
+Function plsrayclass::setN, value
+
+  self.n = value
+  Return, 1
+
 End
 
-
-Function plsrayclass::setDepth, value
-
-  self.depth = value
-  return, 1
-  
-End
 
 
 Function plsrayclass::getOrigin
@@ -88,30 +81,30 @@ Function plsrayclass::getDirection
 End
 
 
-Function plsrayclass::getMint
+Function plsrayclass::getDurAnchor
 
-  return, self.mint
+  return, self.durAnchor
   
 End
 
 
-Function plsrayclass::getMaxt
+Function plsrayclass::getluTable
 
-  return, self.maxt
+  return, self.luTable
   
 End
 
 
-Function plsrayclass::getTime
+Function plsrayclass::getN
 
-  return, self.time
+  return, self.n
   
 End
 
 
-Function plsrayclass::getDepth
+Function plsrayclass::getPulse
 
-  return, self.depth
+  return, self.pulse
   
 End
 
@@ -156,9 +149,12 @@ Function plsrayclass::findSimilarRay, rayArr, $
   
   direction = dirArr.getSubArray(dID)
   rayDirection = self.getDirection()
+;  rayDirectionArr = rayDirection.duplicateToPointArrayClass(n_elements(dID))
   angleArr = direction.getRadAngle(rayDirection)
   
-  dID = Where(angleARr le angle, /NULL)
+  minAngle = min(angleArr, minSub)
+  
+  
   
     
   return, 1

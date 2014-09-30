@@ -1,43 +1,15 @@
-Function plsrayarrayclass::init, orig, dir, mint, maxt
+Function plsrayarrayclass::init, orig, dir, pulse
 
   Compile_opt idl2
   
-  case n_params() of
-    0: begin
-        self.origin = pointarrayclass()
-        self.direction = vectorarrayclass()
-      end
-    1: begin
-      if strlowcase(obj_class(orig)) eq 'vectorarrayclass' then begin
-          self.origin = pointarrayclass()
-          self.direction = orig
-      endif 
-      if strlowcase(obj_class(orig)) eq 'pointarrayclass' then begin
-          self.origin = orig
-          self.direction = vectorarrayclass()
-      endif
-      end
-    2: begin
-      ;print, '2 arguments found...' 
-      self.origin = orig
-      self.direction = dir
-      end
-    3: begin
-      ;print, '3 arguments found...'
-      self.origin = orig
-      self.direction = dir
-      self.mint = mint
-    end
-    4: begin
-      ;print, '4 arguments found...'
-      self.origin = orig
-      self.direction = dir
-      self.mint = mint
-      self.maxt = maxt
-    end
-    else: print, 'Hummm... something went wrong...'
-  endcase
-  
+  self.Origin = orig
+  self.Direction = dir
+  if n_elements(pulse) ne 0 then begin
+    self.N = pulse.N
+    self.Pulse = pulse.Pulse
+    self.Duranchor = pulse.Durationfromanchor
+    self.Lutable = pulse.Lut
+  endif
   ; Initializing the object
   return, 1
   
@@ -54,51 +26,20 @@ Pro plsrayarrayclass::cleanup
 End
 
 
-Function plsrayarrayclass::setOrigin, point
+Function plsrayarrayclass::setOrigin, point, index
 
   self.origin = point
   return, 1
   
 End
 
-Function plsrayarrayclass::setDirection, vector2
+Function plsrayarrayclass::setDirection, vector2, index
 
   self.direction = vector2
   return, 1
   
 End
 
-
-Function plsrayarrayclass::setMint, value
-
-  self.mint = value
-  return, 1
-  
-End
-
-
-Function plsrayarrayclass::setMaxt, value
-
-  self.maxt = value
-  return, 1
-  
-End
-
-
-Function plsrayarrayclass::setTime, value
-
-  self.time = value
-  return, 1
-  
-End
-
-
-Function plsrayarrayclass::setDepth, value
-
-  self.depth = value
-  return, 1
-  
-End
 
 
 Function plsrayarrayclass::getOrigin
@@ -115,33 +56,6 @@ Function plsrayarrayclass::getDirection
 End
 
 
-Function plsrayarrayclass::getMint
-
-  return, self.mint
-  
-End
-
-
-Function plsrayarrayclass::getMaxt
-
-  return, self.maxt
-  
-End
-
-
-Function plsrayarrayclass::getTime
-
-  return, self.time
-  
-End
-
-
-Function plsrayarrayclass::getDepth
-
-  return, self.depth
-  
-End
-
 
 Function plsrayarrayclass::createChild
 
@@ -150,6 +64,16 @@ Function plsrayarrayclass::createChild
   child.depth = self.depth + 1
   return, child
   
+End
+
+
+Function plsrayarrayclass::createUniqueChild, index
+
+  child = plsrayclass()
+  child.origin = self.Time
+  child.direction = self.Depth + 1
+  Return, child
+
 End
 
 
@@ -167,11 +91,16 @@ End
 Pro plsrayarrayclass__define
 
   void = {plsrayarrayclass, $
-    origin    : pointarrayclass(),$
-    direction : vectorarrayclass(),$
-    mint      : 0.D,$
-    maxt      : 0.D,$
-    time      : 0.D,$
+    origin    : pointclass(),$        ; Origin of the pluse = Anchor point
+    direction : vectorclass(),$       ; Direction of the pulse = Normalized Anchor to Target vector
+    n         : ptr_new(),$         ; Pointer to the number of samples per pulse segment,  concatenated into an single array
+    pulse     : ptr_new(),$         ; Pointer to the wavefrom values concatenated together
+    durAnchor : ptr_new(),$         ; Pointer to the Duration from Anchor values, concatenated into an single array
+    luTable   : ptr_new(),$         ; Pointer to the lookup table for the pulse
+    outX      : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
+    outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
+    inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
+    inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
     depth     : 0B $
   }
 
