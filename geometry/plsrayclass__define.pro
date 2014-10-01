@@ -9,6 +9,8 @@ Function plsrayclass::init, orig, dir, pulse
   self.durAnchor = pulse.durationFromAnchor
   self.luTable = pulse.lut
  
+  ; Call consoleclass superclass Initialization method.
+  dum = self->consoleclass::init()
   
   ; Initializing the object
   return, 1
@@ -109,6 +111,41 @@ Function plsrayclass::getPulse
 End
 
 
+Function plsrayclass::getNumberOfSegment
+
+return, n_elements(*self.n)
+
+End
+
+
+
+Function plsrayclass::getLastSegment
+
+n = self.getNumberOfSegment()
+nSamples = (*self.n)[n-1]
+samples = (*self.pulse)[-nSamples:*]
+time = (*self.durAnchor)[n-1]
+luTable = *self.luTable
+
+time = indgen(nSamples) + time
+coordinates = self.tracePulse(time)
+intensity = luTable[samples]
+
+Return, {coor:coordinates, int:intensity}
+
+End
+
+
+
+Function plsrayclass::getSegmentNumber, n
+
+  ; TBD
+  Return, 1
+
+End
+
+
+
 Function plsrayclass::createChild
 
   child = plsrayclass()
@@ -119,21 +156,33 @@ Function plsrayclass::createChild
 End
 
 
-Function plsrayclass::traceRay, t
+Function plsrayclass::tracePulse, t
 
-;  print, (self.origin).xyz()
-;  print, (self.direction).xyz()
-  temp = [ (self.origin).xyz() + (replicate(t,3) * (self.direction).xyz() ) ]
-  return, pointclass( temp )
+  x = (self.origin).X() + ( t * (self.direction).X() )
+  y = (self.origin).Y() + ( t * (self.direction).Y() )
+  z = (self.origin).Z() + ( t * (self.direction).Z() )
+  
+;  x_{first} = x_{anchor} + first_returning_sample * dx  
+;  y_{first} = y_{anchor} + first_returning_sample * dy
+;  z_{first} = z_{anchor} + first_returning_sample * dz
+
+if n_elements(x) eq 1 then return, pointclass(x,y,z) else return, pointarrayclass(x,y,z)
 
 End
 
 
 
+; This function return a ray that has a similar anchor point and similar direction
+; A distance threshold can be set for the anchor point distance
+; For the angle, now we just take the smallest one on the selected rays
 Function plsrayclass::findSimilarRay, rayArr, $
   THRESDIST = THRESDIST, $
   THRESANGL = THRESANGL
 
+  self.printsep
+  self.print, 1, 'Looking for similar ray'
+  self.printsep
+  
   ; Find the closest anchor point rays
   if Keyword_set(THRESDIST) then distance = THRESDIST else distance = 1.
   if Keyword_set(THRESANGL) then angle = THRESANGL else angle = 5. * !DTOR
@@ -147,17 +196,26 @@ Function plsrayclass::findSimilarRay, rayArr, $
 
   dID = Where(pointDist le distance, /NULL)
   
-  direction = dirArr.getSubArray(dID)
-  rayDirection = self.getDirection()
-;  rayDirectionArr = rayDirection.duplicateToPointArrayClass(n_elements(dID))
-  angleArr = direction.getRadAngle(rayDirection)
-  
-  minAngle = min(angleArr, minSub)
-  
-  
-  
+
+  if dID ne !NULL then begin
+ 
+    self.print, 1, Strcompress(String(N_elements(dID)), /REMOVE_ALL) + ' ray have been selected...'
+    self.print, 1, 'Min Max distance from reference ray : ' + Strcompress(String(Min(pointDist[dID])), /REMOVE_ALL) + ' ' +  Strcompress(String(Max(pointDist[dID])), /REMOVE_ALL)
+
+    direction = dirArr.getSubArray(dID)
+    rayDirection = self.getDirection()
+    ; rayDirectionArr = rayDirection.duplicateToPointArrayClass(n_elements(dID))
+    angleArr = direction.getRadAngle(rayDirection)
     
-  return, 1
+    ; Here avoid to use the angle threshold to make sure we get the smaller angle value
+    minAngle = min(angleArr, minSub)
+    
+    self.print, 1, 'Angle between reference ray and similar ray : ' + strcompress(string(!radeg * minAngle), /REMOVE_ALL) + ' deg'
+    self.print, 1, 'Distance between reference ray and similar ray : ' + strcompress(string(pointDist[did[minSub]]), /REMOVE_ALL) + ' m'
+    ; Returning the index of the most similar ray      
+    return, did[minSub]
+  
+  endif else return, !NULL
 
 End
 
@@ -178,7 +236,8 @@ Pro plsrayclass__define
     outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
     inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
     inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
-    depth     : 0B $
+    depth     : 0B, $
+    inherits consoleclass $
   }
 
 End

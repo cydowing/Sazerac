@@ -405,12 +405,21 @@ End
 
 Function vectorarrayclass::getSubArray, index
 
-  Return, vectorarrayclass($
+  if n_elements(index) eq 1 then begin
+    Return, vectorclass($
+      (*self.Pt)[index,0],$
+      (*self.Pt)[index,1],$
+      (*self.Pt)[index,2] $
+      )
+    
+  endif else begin
+    Return, vectorarrayclass($
                   (*self.Pt)[index,0],$
                   (*self.Pt)[index,1],$
                   (*self.Pt)[index,2] $
                   )
-
+  endelse
+  
 End
 
 
