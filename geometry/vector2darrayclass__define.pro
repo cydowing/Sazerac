@@ -1,8 +1,8 @@
 ;+
 ; To be revisited for a better handle or initialisation
-; possibility to initialize directly with a vector2Darrayclass argument
+; possibility to initialize directly with a vector2darrayclass argument
 ;-
-Function vector2Darrayclass::init, cox, coy
+Function vector2darrayclass::init, cox, coy
 
   Compile_opt idl2
 
@@ -71,14 +71,14 @@ End
 
 
 
-Pro vector2Darrayclass::cleanup
+Pro vector2darrayclass::cleanup
 
   Compile_opt idl2
   
 End
 
 
-Function vector2Darrayclass::x, value
+Function vector2darrayclass::x, value
 
   return, (*self.pt)[*,0]
   
@@ -86,7 +86,7 @@ End
 
 
 
-Function vector2Darrayclass::y
+Function vector2darrayclass::y
 
   return, (*self.pt)[*,1]
   
@@ -94,14 +94,14 @@ End
 
 
 
-Function vector2Darrayclass::xy
+Function vector2darrayclass::xy
 
   return, (*self.pt)
   
 End
 
 
-Function vector2Darrayclass::coordinateValueByIndex, i, j
+Function vector2darrayclass::coordinateValueByIndex, i, j
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -118,7 +118,7 @@ Function vector2Darrayclass::coordinateValueByIndex, i, j
 End
 
 
-Function vector2Darrayclass::setX, i, value
+Function vector2darrayclass::setX, i, value
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -132,7 +132,7 @@ End
 
 
 
-Function vector2Darrayclass::setY, i, value
+Function vector2darrayclass::setY, i, value
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -146,7 +146,7 @@ End
 
 
 
-Function vector2Darrayclass::extractPoint, pointId
+Function vector2darrayclass::extractPoint, pointId
 
   if pointId ge self.column then begin
     print, 'Column value outside of data range...'
@@ -162,7 +162,7 @@ Function vector2Darrayclass::extractPoint, pointId
 End
 
 
-Function vector2Darrayclass::translate, vector2
+Function vector2darrayclass::translate, vector2
 
   (*self.pt)[*,0] += vector2.x()
   (*self.pt)[*,1] += vector2.y()
@@ -172,7 +172,7 @@ Function vector2Darrayclass::translate, vector2
 End
 
 
-Function vector2Darrayclass::scaleUp, vector2
+Function vector2darrayclass::scaleUp, vector2
 
   (*self.pt)[*,0] *= vector2.x()
   (*self.pt)[*,1] *= vector2.y()
@@ -183,7 +183,7 @@ Function vector2Darrayclass::scaleUp, vector2
 End
 
 
-Function vector2Darrayclass::scaleDown, vector2
+Function vector2darrayclass::scaleDown, vector2
 
   temp = 1. / vector2.xyz()
   (*self.pt)[*,0] *= temp[0]
@@ -195,14 +195,14 @@ Function vector2Darrayclass::scaleDown, vector2
 End
 
 
-Function vector2Darrayclass::opposite
+Function vector2darrayclass::opposite
 
   return, -(*self.pt)
 
 End
 
 
-Function vector2Darrayclass::length
+Function vector2darrayclass::length
 
   return, sqrt( ((*self.pt)[*,0])^2 + ((*self.pt)[*,1])^2 + ((*self.pt)[*,2])^2 )
   
@@ -210,21 +210,21 @@ end
 
 
 
-Function vector2Darrayclass::horizLength
+Function vector2darrayclass::horizLength
 
   return, sqrt( ((*self.pt)[*,0])^2 + ((*self.pt)[*,1])^2 )
   
 end
 
 
-Function vector2Darrayclass::squareLength
+Function vector2darrayclass::squareLength
 
   return, ((*self.pt)[*,0])^2 + ((*self.pt)[*,1])^2 + ((*self.pt)[*,2])^2
  
 end
 
 
-Pro vector2Darrayclass::normalizeLength
+Pro vector2darrayclass::normalizeLength
 
   inv = 1. / self.length()
   (*self.pt) *= inv
@@ -232,7 +232,7 @@ Pro vector2Darrayclass::normalizeLength
 End
 
 
-Function vector2Darrayclass::getNormLength
+Function vector2darrayclass::getNormLength
 
   inv = 1. / self.length()
   return, ( (*self.pt) * inv )
@@ -240,7 +240,7 @@ Function vector2Darrayclass::getNormLength
 End
 
 
-Function vector2Darrayclass::dot, vector2
+Function vector2darrayclass::dot, vector2
 
   dot = ((*self.pt)[*,0] * vector2.x()) + ((*self.pt)[*,1] * vector2.y()) + ((*self.pt)[*,2] * vector2.z())
   return, dot
@@ -248,21 +248,21 @@ Function vector2Darrayclass::dot, vector2
 End
 
 
-Function vector2Darrayclass::getRadAngle, vector2
+Function vector2darrayclass::getRadAngle, vector2
 
   return, acos( self.dot(vector2) / ( self.length() * vector2.length() ) )
   
 End
 
 
-Function vector2Darrayclass::getDegAngle, vector2
+Function vector2darrayclass::getDegAngle, vector2
 
   return, 180./!PI * acos( self.dot(vector2) / ( self.length() * vector2.length() ) )
   
 End
 
 
-Function vector2Darrayclass::det, vector2
+Function vector2darrayclass::det, vector2
 
   detX = ((*self.pt)[*,1] * vector2.z()) - ((*self.pt)[*,2] * vector2.y())
   detY = ((*self.pt)[*,2] * vector2.x()) - ((*self.pt)[*,0] * vector2.z())
@@ -270,14 +270,14 @@ Function vector2Darrayclass::det, vector2
 ;  print, detX
 ;  print, detY
 ;  print, detZ
-  return, vector2Darrayclass(detX, detY, detZ)
+  return, vector2darrayclass(detX, detY, detZ)
 
 End
 
 
-Function vector2Darrayclass::paralVolume, vector2
+Function vector2darrayclass::paralVolume, vector2
 
-  tempvec = vector2Darrayclass(self.det(vector2))
+  tempvec = vector2darrayclass(self.det(vector2))
   return, tempvec.length()
 
 End
@@ -293,7 +293,7 @@ End
 ; IDL> print, t[0].xyz()
 ; 0.0000000     0.062378287     -0.99805260
 ;-
-Function vector2Darrayclass::localCoordinateSystem
+Function vector2darrayclass::localCoordinateSystem
 
   tempv2 = fltarr(self.column,3)
 
@@ -315,11 +315,11 @@ Function vector2Darrayclass::localCoordinateSystem
   print, tempv2[*,1]
   print, tempv2[*,2]
   print, 'v2'
-  v2 = vector2Darrayclass(tempv2[*,0], tempv2[*,1], tempv2[*,2])
+  v2 = vector2darrayclass(tempv2[*,0], tempv2[*,1], tempv2[*,2])
   
   ;v3 = fltarr(self.column)
   print, 'v3'
-  v3 = vector2Darrayclass(self.det(v2))
+  v3 = vector2darrayclass(self.det(v2))
 
   ;with this line the 3 vectors coordinates are return
   ;return, [ [self.xyz()],[v2.xyz()],[v3.xyz()] ] 
@@ -331,9 +331,9 @@ End
 
 
 
-Pro vector2Darrayclass__define
+Pro vector2darrayclass__define
 
-  void = {vector2Darrayclass, $
+  void = {vector2darrayclass, $
     pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,2)
     column   : 0         ,$  ; number of columns in the array
     row      : 0          $  ; number of rows in the array
