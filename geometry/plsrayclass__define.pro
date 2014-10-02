@@ -137,9 +137,36 @@ End
 
 
 
+Function plsrayclass::getFirstSegment
+
+  nSamples = (*self.n)[1]
+  samples = (*self.pulse)[(*self.n)[0]:(*self.n)[0]+nSamples-1]
+  time = (*self.durAnchor)[1]
+  luTable = *self.luTable
+
+  time = indgen(nSamples) + time
+  coordinates = self.tracePulse(time)
+  intensity = luTable[samples]
+
+  Return, {coor:coordinates, int:intensity}
+
+End
+
+
+
 Function plsrayclass::getSegmentNumber, n
 
-  ; TBD
+  nSamples = (*self.n)[n]
+  start = total(nSamples[0:n-1])
+  samples = (*self.pulse)[start:start+nSamples-1]
+  time = (*self.durAnchor)[n]
+  luTable = *self.luTable
+
+  time = indgen(nSamples) + time
+  coordinates = self.tracePulse(time)
+  intensity = luTable[samples]
+
+  Return, {coor:coordinates, int:intensity}
   Return, 1
 
 End

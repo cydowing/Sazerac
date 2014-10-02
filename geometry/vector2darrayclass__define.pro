@@ -6,61 +6,64 @@ Function vector2darrayclass::init, cox, coy
 
   Compile_opt idl2
 
+  self.pt = ptr_new( [[cox],[coy]] )
+  self.column = (size(cox,/dimensions))[0]
+  self.row = 2
 
-  case n_params() of
-    0 : begin
-          self.pt = ptr_new(/allocate_heap)
-          self.column = 0
-          self.row = 0
-        end
-    1 : begin
-          if size(cox, /TYPE) ne 8 then begin
-            ; checking if it a matrix
-            tempSize = size(cox,/dimensions)
-            if n_elements(tempSize) eq 1 then begin
-              print, 'Wrong size of input data...'
-              print, 'Make sure that one of the dimension is 3...'
-              return, 0
-            endif else begin
-              dum = where(tempSize eq 2, count, complement = comp)
-              if count eq 0 then begin
-                print, 'Wrong size of input data...'
-                print, 'Make sure that one of the dimension is 2...'
-                return, 0
-              endif else begin
-                if dum[0] eq 0 then begin
-                  self.pt = ptr_new(transpose(cox))
-                  self.column = tempSize[1]
-                  self.row = tempSize[0]
-                endif else begin
-                  self.pt = ptr_new(cox)
-                  self.column = tempSize[0]
-                  self.row = tempSize[1]
-                endelse
-              endelse
-            endelse
-         endif else begin
-          dim = size(cox.xyz(), /dimensions)
-          self.pt = ptr_new( cox.xyz() )
-          self.column = dim[0]
-          self.row = dim[1]
-         endelse
-        end
-        
-    2 : begin
-          if (size(cox,/dimensions))[0] ne (size(coy,/dimensions))[0] then begin
-             print, 'Wrong size of input data...'
-             return, 0
-          endif else begin
-             ; It is the user duty to provid columns major array coordinates
-             self.pt = ptr_new( [[cox],[coy]] )
-             self.column = (size(cox,/dimensions))[0]
-             self.row = 2
-          endelse
-        end
-    else : print, 'Wrong number of elements for initialization...'
-  
-  endcase
+;  case n_params() of
+;    0 : begin
+;          self.pt = ptr_new(/allocate_heap)
+;          self.column = 0
+;          self.row = 0
+;        end
+;    1 : begin
+;          if size(cox, /TYPE) ne 8 then begin
+;            ; checking if it a matrix
+;            tempSize = size(cox,/dimensions)
+;            if n_elements(tempSize) eq 1 then begin
+;              print, 'Wrong size of input data...'
+;              print, 'Make sure that one of the dimension is 3...'
+;              return, 0
+;            endif else begin
+;              dum = where(tempSize eq 2, count, complement = comp)
+;              if count eq 0 then begin
+;                print, 'Wrong size of input data...'
+;                print, 'Make sure that one of the dimension is 2...'
+;                return, 0
+;              endif else begin
+;                if dum[0] eq 0 then begin
+;                  self.pt = ptr_new(transpose(cox))
+;                  self.column = tempSize[1]
+;                  self.row = tempSize[0]
+;                endif else begin
+;                  self.pt = ptr_new(cox)
+;                  self.column = tempSize[0]
+;                  self.row = tempSize[1]
+;                endelse
+;              endelse
+;            endelse
+;         endif else begin
+;          dim = size(cox.xyz(), /dimensions)
+;          self.pt = ptr_new( cox.xyz() )
+;          self.column = dim[0]
+;          self.row = dim[1]
+;         endelse
+;        end
+;        
+;    2 : begin
+;          if (size(cox,/dimensions))[0] ne (size(coy,/dimensions))[0] then begin
+;             print, 'Wrong size of input data...'
+;             return, 0
+;          endif else begin
+;             ; It is the user duty to provid columns major array coordinates
+;             self.pt = ptr_new( [[cox],[coy]] )
+;             self.column = (size(cox,/dimensions))[0]
+;             self.row = 2
+;          endelse
+;        end
+;    else : print, 'Wrong number of elements for initialization...'
+;  
+;  endcase
 
   
   ; Initializing the object
