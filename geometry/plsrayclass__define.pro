@@ -136,7 +136,6 @@ Return, {coor:coordinates, int:intensity}
 End
 
 
-
 Function plsrayclass::getFirstSegment
 
   nSamples = (*self.n)[1]
@@ -157,8 +156,11 @@ End
 Function plsrayclass::getSegmentNumber, n
 
   nSamples = (*self.n)[n]
-  start = total(nSamples[0:n-1])
-  samples = (*self.pulse)[start:start+nSamples-1]
+  if n eq 0 then begin
+    samples = (*self.pulse)[0:nSamples-1]
+  endif else begin
+    samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
+  endelse
   time = (*self.durAnchor)[n]
   luTable = *self.luTable
 
