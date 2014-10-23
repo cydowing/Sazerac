@@ -9,6 +9,12 @@ Geometry
 Contains geometric class object that are usefull for ray tracing, vector and point manipulation as well as object transformation.
 
 
+Multithread
+===========
+
+Contains a binary SAV file that can be use to enable multi-threading for specific task. Email us if you want to have more information on this and get access to it - info at carbomap dot com
+
+
 Output
 ======
 
