@@ -1,7 +1,7 @@
 Function transformationclass::init, matrix, invmatrix
 
   Compile_opt idl2
-  if n_elements(a) ne 0 then print, a
+;  if n_elements(a) ne 0 then print, a
   case n_params() of
     0 : begin
           self.matrix = identity(4)
