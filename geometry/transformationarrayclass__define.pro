@@ -686,9 +686,9 @@ Function transformationarrayclass::vectorTransform, vec2
     y = vec2.y()
     z = vec2.z()
     return, vectorarrayclass($
-                          self.matrix[*,0,0] * x + self.matrix[*,1,0] * y + self.matrix[*,2,0] * z, $
-                          self.matrix[*,0,1] * x + self.matrix[*,1,1] * y + self.matrix[*,2,1] * z, $
-                          self.matrix[*,0,2] * x + self.matrix[*,1,2] * y + self.matrix[*,2,2] * z  $ 
+                          (*(self.matrix))[*,0,0] * x + (*(self.matrix))[*,1,0] * y + (*(self.matrix))[*,2,0] * z, $
+                          (*(self.matrix))[*,0,1] * x + (*(self.matrix))[*,1,1] * y + (*(self.matrix))[*,2,1] * z, $
+                          (*(self.matrix))[*,0,2] * x + (*(self.matrix))[*,1,2] * y + (*(self.matrix))[*,2,2] * z  $ 
                           )                         
 ;    return, vectorarrayclass( $
 ;                          self.matrix[0,0] * x + self.matrix[1,0] * y + self.matrix[2,0] * z, $
