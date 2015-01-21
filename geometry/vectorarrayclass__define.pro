@@ -13,7 +13,7 @@ Function vectorarrayclass::init, cox, coy, coz
           self.row = 0
         end
     1 : begin
-          if strlowcase(obj_class(cox)) ne 'vectorclass' then begin
+          if size(cox,/TYPE) ne 11 then begin
             ; checking if it a matrix
             tempSize = size(cox,/dimensions)
             if n_elements(tempSize) eq 1 then begin
@@ -21,7 +21,7 @@ Function vectorarrayclass::init, cox, coy, coz
               print, 'Make sure that one of the dimension is 3...'
               return, 0
             endif else begin
-            dum = where(size(cox,/dimensions) eq 3, count, complement = comp, /L64)
+            dum = where(tempSize eq 3, count)
             if count eq 0 then begin
               print, 'Wrong size of input data...'
               print, 'Make sure that one of the dimension is 3...'
@@ -29,12 +29,12 @@ Function vectorarrayclass::init, cox, coy, coz
             endif else begin
               if dum[0] eq 0 then begin
                 self.pt = ptr_new(transpose(cox))
-                self.column = dum[1]
-                self.row = dum[0]
+                self.column = tempSize[1]
+                self.row = tempSize[0]
               endif else begin
                 self.pt = ptr_new(cox)
-                self.column = dum[0]
-                self.row = dum[1]
+                self.column = tempSize[0]
+                self.row = tempSize[1]
               endelse
             endelse
           endelse
@@ -75,6 +75,113 @@ End
 
 
 
+;+
+; This is an overload of the + function
+; Can remplace the translate method
+;-
+Function vectorarrayclass::_overloadPlus, Left, Right
+
+  if Strlowcase(Obj_class(Left)) ne Strlowcase(Obj_class(Right)) then begin
+    Print, 'You try to add to differents objects types...'
+    Return, 0
+  endif 
+  
+  if self.n() ne right.n() then begin
+    Print, "The vectors array don't have the same size..."
+    Return, 0
+  endif
+  
+  
+    Return, vectorarrayclass(self.xyz() + Right.xyz())
+
+End
+
+
+
+;+
+; This is an overload of the + function
+; Can remplace the translate method
+;-
+Function vectorarrayclass::_overloadMinus, Left, Right
+
+  if Strlowcase(Obj_class(Left)) ne Strlowcase(Obj_class(Right)) then begin
+    Print, 'You try to add to differents objects types...'
+    Return, 0
+  endif 
+  
+  if self.n() ne right.n() then begin
+    Print, "The vectors array don't have the same size..."
+    Return, 0
+  endif
+  
+    Return, vectorclass(self.xyz() - Right.xyz())
+
+End
+
+
+
+;+
+; This is an overload of the * function
+; Can remplace the translate method
+;-
+Function vectorarrayclass::_overloadAsterisk, Left, Right
+
+  if Strlowcase(Obj_class(Left)) ne Strlowcase(Obj_class(Right)) then begin
+    Print, 'You try to add to differents objects types...'
+    Return, 0
+  endif
+
+  if self.n() ne right.n() then begin
+    Print, "The vectors array don't have the same size..."
+    Return, 0
+  endif
+
+  Return, vectorclass(self.xyz() * Right.xyz())
+
+End
+
+
+
+;+
+; This is an overload of the / function
+; Can remplace the translate method
+;-
+Function vectorarrayclass::_overloadSlash, Left, Right
+
+  if Strlowcase(Obj_class(Left)) ne Strlowcase(Obj_class(Right)) then begin
+    Print, 'You try to add to differents objects types...'
+    Return, 0
+  endif
+
+  if self.n() ne right.n() then begin
+    Print, "The vectors array don't have the same size..."
+    Return, 0
+  endif
+
+  Return, vectorclass(self.xyz() / Right.xyz())
+
+End
+
+
+
+Function vectorarrayclass::addToAverage, Right
+
+  if Strlowcase(Obj_class(self)) ne Strlowcase(Obj_class(Right)) then begin
+    Print, 'You try to add to differents objects types...'
+    Return, 0
+  endif
+
+  if self.n() ne right.n() then begin
+    Print, "The vectors array don't have the same size..."
+    Return, 0
+  endif
+
+  (self.xyz()) += Right.xyz()
+  
+  Return, 1
+
+End
+
 
 
 Function vectorarrayclass::x
@@ -99,11 +206,47 @@ Function vectorarrayclass::z
 End
 
 
+
+Function vectorarrayclass::setX, value, indice
+
+  (*self.Pt)[indice,0] = value
+  Return, 1
+  
+End
+
+
+
+Function vectorarrayclass::setY, value, indice
+
+  (*self.Pt)[indice,1] = value
+  Return, 1
+
+End
+
+
+Function vectorarrayclass::setZ, value, indice
+
+  (*self.Pt)[indice,2] = value
+  Return, 1
+
+End
+
+
+
 Function vectorarrayclass::xyz
 
   return, (*self.pt)
   
 End
+
+
+
+Function vectorarrayclass::n
+
+  Return, self.column
+
+End
+
 
 
 Function vectorarrayclass::coordinateValueByIndex, i, j
@@ -295,7 +438,7 @@ Function vectorarrayclass::absDot, vector2
 End
 
 
-Function vectorarrayclass::Dot, vector2
+Function vectorarrayclass::dot, vector2
 
   dot = ((*self.pt)[*,0] * vector2.x()) + ((*self.pt)[*,1] * vector2.y()) + ((*self.pt)[*,2] * vector2.z())
   return, dot
@@ -427,9 +570,10 @@ End
 Pro vectorarrayclass__define
 
   void = {vectorarrayclass, $
-    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
-    column   : 0UL       ,$  ; number of columns in the array
-    row      : 0          $  ; number of rows in the array
+    pt       : ptr_new()        ,$  ; pointer to the points array store as fltarr(n,3)
+    column   : 0UL             ,$  ; number of columns in the array
+    row      : 0                      ,$  ; number of rows in the array
+    inherits IDL_Object     $ ; Override the operators
   }
 
 End
