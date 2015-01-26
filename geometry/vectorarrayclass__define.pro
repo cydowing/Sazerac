@@ -207,32 +207,6 @@ End
 
 
 
-Function vectorarrayclass::setX, value, indice
-
-  (*self.Pt)[indice,0] = value
-  Return, 1
-  
-End
-
-
-
-Function vectorarrayclass::setY, value, indice
-
-  (*self.Pt)[indice,1] = value
-  Return, 1
-
-End
-
-
-Function vectorarrayclass::setZ, value, indice
-
-  (*self.Pt)[indice,2] = value
-  Return, 1
-
-End
-
-
-
 Function vectorarrayclass::xyz
 
   return, (*self.pt)
@@ -355,9 +329,13 @@ Function vectorarrayclass::scaleDown, vector2
 End
 
 
-Function vectorarrayclass::opposite
+Function vectorarrayclass::opposite, index = index
 
-  return, -(*self.pt)
+  if keyword_set(index) then begin
+    temp = (*self.pt)
+    temp[index, *] *= -1.
+    return, vectorarrayclass(temp)
+  endif else return, -(*self.pt)
 
 End
 
