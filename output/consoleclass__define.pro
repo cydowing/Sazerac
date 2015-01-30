@@ -264,6 +264,8 @@ End
 
 Pro consoleclass__define
 
+  COMPILE_OPT idl2, HIDDEN
+  
   ; Definition of the data hold by the object
   void = {consoleclass, $
     consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
