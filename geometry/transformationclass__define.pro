@@ -240,7 +240,7 @@ Function transformationclass::rotateAnyAxis, angle, vecAxis
     return, 0
   endif
   if strlowcase(obj_class(vectorAxis)) ne 'vectorclass' then begin 
-    print, 'Please provide one rotation angle...'
+    print, 'Please provide one rotational axe with a vectorclass...'
     return, 0
   endif
   
@@ -511,7 +511,7 @@ Function transformationclass::pointArrayTransform, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, pointarrayclass(newx, newy, newz) else return, pointarrayclass( ([newx, newy, newz]*invw) )
+    if w[0] eq 1 then return, pointarrayclass(newx, newy, newz) else return, pointarrayclass( ([[newx],[newy], [newz]]*invw) )
   endelse
   
 End

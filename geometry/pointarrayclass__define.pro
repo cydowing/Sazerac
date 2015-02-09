@@ -195,14 +195,62 @@ Function pointarrayclass::extractPoint, pointId
 End
 
 
+Function pointarrayclass::findmin, $
+                                                  INDEX = INDEX, $
+                                                  X = X, Y = Y, Z = Z
+
+if keyword_set(X) then range = 0
+if keyword_set(Y) then range = 1
+if keyword_set(Z) then range = 2
+
+dum = min( (*self.pt)[*,range], minSub )
+
+if keyword_set(INDEX) then return, minsub else return, pointclass(self.xyz(minSub))
+
+
+End
+
+
+Function pointarrayclass::findmax, $
+  INDEX = INDEX, $
+  X = X, Y = Y, Z = Z
+
+  if keyword_set(X) then range = 0
+  if keyword_set(Y) then range = 1
+  if keyword_set(Z) then range = 2
+
+  dum = max( (*self.pt)[*,range], maxSub )
+
+  if keyword_set(INDEX) then return, maxsub else return, pointclass(self.xyz(maxSub))
+
+
+End
+
+
+Function pointarrayclass::findaverage, $
+                                            INDEX = INDEX, $
+                                            X = X, Y = Y, Z = Z
+
+  dum = mean( (*self.pt), dimension = 1 )
+
+  if keyword_set(X) then return, dum[0]
+  if keyword_set(Y) then return, dum[1]
+  if keyword_set(Z) then return,  dum[2]
+
+End
+
+
+
 Function pointarrayclass::addPointToArray, pt2
 
+return, 1
 
 End
 
 
 Function pointarrayclass::removePointToArray, pointId
 
+return, 1
 
 End
 
