@@ -184,32 +184,72 @@ End
 
 
 
-Function vectorarrayclass::x
+Function vectorarrayclass::x, id
 
-  return, (*self.pt)[*,0]
+  if n_elements(id) eq 0 then begin
+  
+    return, (*self.pt)[*,0]
+  
+  endif else begin
+    
+    if id ge self.n() then print, 'Provided dimension too big...'
+    
+    return, (*self.pt)[id,0]
+    
+  endelse
   
 End
 
 
 
-Function vectorarrayclass::y
+Function vectorarrayclass::y, id
 
-  return, (*self.pt)[*,1]
+  if n_elements(id) eq 0 then begin
+  
+    return, (*self.pt)[*,1]
+  
+  endif else begin
+    
+    if id ge self.n() then print, 'Provided dimension too big...'
+    
+    return, (*self.pt)[id,1]
+    
+  endelse
   
 End
 
 
-Function vectorarrayclass::z
+Function vectorarrayclass::z, id
 
-  return, (*self.pt)[*,2]
+  if n_elements(id) eq 0 then begin
+  
+    return, (*self.pt)[*,2]
+  
+  endif else begin
+    
+    if id ge self.n() then print, 'Provided dimension too big...'
+    
+    return, (*self.pt)[id,2]
+    
+  endelse
   
 End
 
 
 
-Function vectorarrayclass::xyz
+Function vectorarrayclass::xyz, id
 
-  return, (*self.pt)
+  if n_elements(id) eq 0 then begin
+
+    return, (*self.pt)
+
+  endif else begin
+
+    if id ge self.n() then print, 'Provided dimension too big...'
+
+    return, (*self.pt)[id,*]
+
+  endelse
   
 End
 
@@ -280,16 +320,16 @@ Function vectorarrayclass::setZ, i, value
 End
 
 
-Function vectorarrayclass::extractPoint, pointId
+Function vectorarrayclass::extractVector, pointId
 
   if pointId ge self.column then begin
     print, 'Column value outside of data range...'
     return, 0
   endif else begin
-    return, pointclass($
-                      self.coordinateValueByIndex(pointId,0) ,$
-                      self.coordinateValueByIndex(pointId,1) ,$
-                      self.coordinateValueByIndex(pointId,2)  $
+    return, vectorclass($
+                      self.x(pointId) ,$
+                      self.y(pointId) ,$
+                      self.z(pointId)  $
                       )
   endelse
   
