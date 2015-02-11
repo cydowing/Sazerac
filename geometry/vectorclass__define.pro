@@ -40,6 +40,13 @@ Pro vectorclass::cleanup
 End
 
 
+Function vectorclass::create2Dvector
+
+  return, vectorarrayclass(self.vx, self.vy, 0.0)
+
+End
+
+
 Function vectorclass::x
 
   return, self.vx

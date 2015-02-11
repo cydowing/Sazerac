@@ -96,10 +96,7 @@ End
 
 Function pointclass::addVector, vector
 
-  self.x += vector.x()
-  self.y += vector.y()
-  self.z += vector.z()
-  return, [self.x, self.y, self.z]
+  return, pointclass(self.x + vector.x(), self.y +vector.y(), self.z + vector.z())
 
 End
 
@@ -126,6 +123,15 @@ Function pointclass::distance, point
   return, sqrt( self.sqrtDistance(point))
   
 End
+
+
+Function pointclass::orthogonalDistance, origin, vector
+
+  vec = self.makeVector(origin)
+  return, vec.dot(vector) / vector.length()
+  
+End
+
 
 
 Function pointclass::makeVector, point2

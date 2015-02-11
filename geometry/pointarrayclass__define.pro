@@ -24,16 +24,13 @@ Function pointarrayclass::init, cox, coy, coz
             endelse
         end
     3 : begin
-          if (size(cox,/dimensions))[0] ne (size(coy,/dimensions))[0] or $
-             (size(cox,/dimensions))[0] ne (size(coz,/dimensions))[0] then begin
-             print, 'Wrong size of input data...'
-             return, 0
-          endif else begin
+            if size(cox, /N_DIMENSIONS) ne 1 then cox = transpose(cox)
+            if size(coy, /N_DIMENSIONS) ne 1 then coy = transpose(coy)
+            if size(coz, /N_DIMENSIONS) ne 1 then coz = transpose(coz)
              ; It is the user duty to provid columns major array coordinates
              self.pt = ptr_new( [[cox],[coy],[coz]] )
              self.column = (size(cox,/dimensions))[0]
              self.row = 3
-          endelse
         end
     else : print, ' Pointarrayclass - Wrong number of elements for initialization...'
   
@@ -288,6 +285,15 @@ Function pointarrayclass::distance, point
   
 End
 
+
+
+Function pointarrayclass::orthogonalDistance, origin, vector
+
+  ; TBD - not finished as not method to compute dot in an array approach
+  vec = self.makeVectorArray(origin)
+  return, abs(vec.dot(vector)) / vector.getnormlength()
+
+End
 
 ;+
 ; This function should be called makeVectorArrayFromSinglePoint to make more sense

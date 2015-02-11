@@ -404,13 +404,13 @@ Function vectorarrayclass::squareLength
 end
 
 
-Function vectorarrayclass::normalizeLength
+Pro vectorarrayclass::normalizeLength
 
   inv = 1. / self.length()
   dinv = [[inv],[inv],[inv]]
   (*self.pt) *= dinv
   dinv = !NULL
-  return, 1
+
   
 End
 
