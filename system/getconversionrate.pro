@@ -8,6 +8,8 @@
 ;-
 Function getConversionRate, FROM = FROM, TO = TO
 
+COMPILE_OPT idl2, HIDDEN
+
 if not keyword_set(FROM) then begin
   print, 'Keyword FROM needs to be specify...'
   return, 0

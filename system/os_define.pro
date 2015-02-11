@@ -1,5 +1,7 @@
 Function os_define
 
+COMPILE_OPT idl2, HIDDEN
+
 ; Creating structure to return
 os = {osStructure, osType:'',osRoot:'',sep:'',home:''}
 
