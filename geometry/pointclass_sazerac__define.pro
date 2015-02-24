@@ -1,4 +1,4 @@
-Function pointclass::init, cox, coy, coz
+Function pointclass_sazerac::init, cox, coy, coz
 
   Compile_opt idl2
   ;resolve_routine, 'vectorclass'
@@ -15,14 +15,14 @@ Function pointclass::init, cox, coy, coz
             self.x = double(cox[0])
             self.y = double(cox[1])
             self.z = double(cox[2])
-          endif else print, 'Pointclass - Wrong number of elements for initialization...'
+          endif else print, 'pointclass_sazerac - Wrong number of elements for initialization...'
         end
     3 : begin
           if n_elements(cox) ne 0 then self.x = double(cox) else self.x = 0.
           if n_elements(coy) ne 0 then self.y = double(coy) else self.y = 0.
           if n_elements(coz) ne 0 then self.z = double(coz) else self.z = 0.
         end
-    else : print, 'PointClass - Wrong number of elements for initialization...'
+    else : print, 'pointclass_sazerac - Wrong number of elements for initialization...'
   
   endcase
   
@@ -32,7 +32,7 @@ Function pointclass::init, cox, coy, coz
 End
 
 
-Pro pointclass::cleanup
+Pro pointclass_sazerac::cleanup
 
   Compile_opt idl2
   
@@ -40,7 +40,7 @@ Pro pointclass::cleanup
 End
 
 
-Function pointclass::x
+Function pointclass_sazerac::x
 
   return, self.x
   
@@ -48,28 +48,28 @@ End
 
 
 
-Function pointclass::y
+Function pointclass_sazerac::y
 
   return, self.y
   
 End
 
 
-Function pointclass::z
+Function pointclass_sazerac::z
 
   return, self.z
   
 End
 
 
-Function pointclass::xyz
+Function pointclass_sazerac::xyz
 
   return, [self.x, self.y, self.z]
   
 End
 
 
-Function pointclass::setX, value
+Function pointclass_sazerac::setX, value
 
   self.x = value
   return, 'done'
@@ -78,7 +78,7 @@ End
 
 
 
-Function pointclass::setY, value
+Function pointclass_sazerac::setY, value
 
   self.y = value
   return, 'done'
@@ -86,7 +86,7 @@ Function pointclass::setY, value
 End
 
 
-Function pointclass::setZ, value
+Function pointclass_sazerac::setZ, value
 
   self.z = value
   return, 'done'
@@ -94,14 +94,14 @@ Function pointclass::setZ, value
 End
 
 
-Function pointclass::addVector, vector
+Function pointclass_sazerac::addVector, vector
 
-  return, pointclass(self.x + vector.x(), self.y +vector.y(), self.z + vector.z())
+  return, pointclass_sazerac(self.x + vector.x(), self.y +vector.y(), self.z + vector.z())
 
 End
 
 
-Function pointclass::subVector, vector
+Function pointclass_sazerac::subVector, vector
 
   self.x -= vector.x()
   self.y -= vector.y()
@@ -111,21 +111,21 @@ Function pointclass::subVector, vector
 End
 
 
-Function pointclass::sqrtDistance, point
+Function pointclass_sazerac::sqrtDistance, point
 
   return, ( (self.x - point.x())^2 + (self.y - point.y())^2 + (self.z - point.z())^2)
   
 End
 
 
-Function pointclass::distance, point
+Function pointclass_sazerac::distance, point
 
   return, sqrt( self.sqrtDistance(point))
   
 End
 
 
-Function pointclass::orthogonalDistance, origin, vector
+Function pointclass_sazerac::orthogonalDistance, origin, vector
 
   vec = self.makeVector(origin)
   return, vec.dot(vector) / vector.length()
@@ -134,20 +134,20 @@ End
 
 
 
-Function pointclass::makeVector, point2
+Function pointclass_sazerac::makeVector, point2
 
   return, vectorclass( point2.x()-self.x, point2.y()-self.y, point2.z()-self.z )
   
 End
 
 
-Function pointclass::duplicateToPointArrayClass, nDim
+Function pointclass_sazerac::duplicateTopointarrayclass_sazerac, nDim
 
   if n_elements(nDim) eq 0 then begin
     print, 'A dimension value is needed...'
     return, 0
   endif else begin
-    return, pointarrayclass( replicate(self.x(),nDim),replicate(self.y(),nDim), replicate(self.z(),nDim) )
+    return, pointarrayclass_sazerac( replicate(self.x(),nDim),replicate(self.y(),nDim), replicate(self.z(),nDim) )
   endelse
   
 End
@@ -155,9 +155,9 @@ End
 
 
 
-Pro pointclass__define
+Pro pointclass_sazerac__define
 
-  void = {pointclass, $
+  void = {pointclass_sazerac, $
     x    : 0.D ,$
     y    : 0.D ,$
     z    : 0.D $

@@ -327,12 +327,12 @@ Function transformationarrayclass::lookAt, camPos, camAim, upVec
     print, 'Please provide three values...'
     return, 0
   endif
-  if strlowcase(obj_class(camPos)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(camPos)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif
-  if strlowcase(obj_class(camAim)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(camAim)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif
   if strlowcase(obj_class(upVec)) ne 'vectorclass' then begin
@@ -397,8 +397,8 @@ Function transformationarrayclass::transfPoint, point, weight
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     if n_elements(weight) ne 0 then p = transpose([point.xyz(),weight]) $
@@ -448,8 +448,8 @@ Function transformationarrayclass::transfPointArray, point, weight
 ;    print, 'Please provide a value...'
 ;    return, 0
 ;  endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     temp = size(point.xyz(),/dimensions)
@@ -509,8 +509,8 @@ Function transformationarrayclass::pointTransform, point
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPoint(point)
@@ -523,7 +523,7 @@ Function transformationarrayclass::pointTransform, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, pointclass(newx, newy, newz) else return, pointclass( ([newx, newy, newz]*invw) )
+    if w eq 1 then return, pointclass_sazerac(newx, newy, newz) else return, pointclass_sazerac( ([newx, newy, newz]*invw) )
   endelse
   
 End
@@ -539,8 +539,8 @@ Function transformationarrayclass::pointTransformWithPtr, point
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPoint(point)
@@ -553,7 +553,7 @@ Function transformationarrayclass::pointTransformWithPtr, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, ptr_new(pointclass(newx, newy, newz)) else return, ptr_new(pointclass( ([newx, newy, newz]*invw) ))
+    if w eq 1 then return, ptr_new(pointclass_sazerac(newx, newy, newz)) else return, ptr_new(pointclass_sazerac( ([newx, newy, newz]*invw) ))
   endelse
   
 End
@@ -569,8 +569,8 @@ Function transformationarrayclass::pointArrayTransform, point
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPointArray(point)
@@ -583,7 +583,7 @@ Function transformationarrayclass::pointArrayTransform, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, pointarrayclass(newx, newy, newz) else return, pointarrayclass( ([newx, newy, newz]*invw) )
+    if w eq 1 then return, pointarrayclass_sazerac(newx, newy, newz) else return, pointarrayclass_sazerac( ([newx, newy, newz]*invw) )
   endelse
   
 End
@@ -599,8 +599,8 @@ Function transformationarrayclass::pointArrayTransformWithPtr, point
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPointArray(point)
@@ -613,7 +613,7 @@ Function transformationarrayclass::pointArrayTransformWithPtr, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, ptr_new(pointarrayclass(newx, newy, newz)) else return, ptr_new(pointarrayclass(([newx, newy, newz]*invw)))
+    if w eq 1 then return, ptr_new(pointarrayclass_sazerac(newx, newy, newz)) else return, ptr_new(pointarrayclass_sazerac(([newx, newy, newz]*invw)))
   endelse
   
 End

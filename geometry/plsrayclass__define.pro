@@ -195,7 +195,7 @@ Function plsrayclass::tracePulse, t
 ;  y_{first} = y_{anchor} + first_returning_sample * dy
 ;  z_{first} = z_{anchor} + first_returning_sample * dz
 
-if n_elements(x) eq 1 then return, pointclass(x,y,z) else return, pointarrayclass(x,y,z)
+if n_elements(x) eq 1 then return, pointclass_sazerac(x,y,z) else return, pointarrayclass_sazerac(x,y,z)
 
 End
 
@@ -220,7 +220,7 @@ Function plsrayclass::findSimilarRay, rayArr, $
   dirArr = rayArr.getDirection()
   
   anchor = self.origin
-  anchorArr = anchor.duplicateToPointArrayClass(oriArr.getDim())
+  anchorArr = anchor.duplicateTopointarrayclass_sazerac(oriArr.getDim())
   pointDist = anchorArr.distance(oriArr)
 
   dID = Where(pointDist le distance, /NULL)
@@ -233,7 +233,7 @@ Function plsrayclass::findSimilarRay, rayArr, $
 
     direction = dirArr.getSubArray(dID)
     rayDirection = self.getDirection()
-    ; rayDirectionArr = rayDirection.duplicateToPointArrayClass(n_elements(dID))
+    ; rayDirectionArr = rayDirection.duplicateTopointarrayclass_sazerac(n_elements(dID))
     angleArr = direction.getRadAngle(rayDirection)
     
     ; Here avoid to use the angle threshold to make sure we get the smaller angle value
@@ -255,7 +255,7 @@ End
 Pro plsrayclass__define
 
   void = {plsrayclass, $
-    origin    : pointclass(),$        ; Origin of the pluse = Anchor point
+    origin    : pointclass_sazerac(),$        ; Origin of the pluse = Anchor point
     direction : vectorclass(),$       ; Direction of the pulse = Normalized Anchor to Target vector
     n         : ptr_new(),$         ; Pointer to the number of samples per pulse segment,  concatenated into an single array
     pulse     : ptr_new(),$         ; Pointer to the wavefrom values concatenated together

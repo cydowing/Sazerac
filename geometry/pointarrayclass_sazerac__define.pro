@@ -1,4 +1,4 @@
-Function pointarrayclass::init, cox, coy, coz
+Function pointarrayclass_sazerac::init, cox, coy, coz
 
   Compile_opt idl2
   
@@ -32,7 +32,7 @@ Function pointarrayclass::init, cox, coy, coz
              self.column = (size(cox,/dimensions))[0]
              self.row = 3
         end
-    else : print, ' Pointarrayclass - Wrong number of elements for initialization...'
+    else : print, ' pointarrayclass_sazerac - Wrong number of elements for initialization...'
   
   endcase
   
@@ -42,7 +42,7 @@ Function pointarrayclass::init, cox, coy, coz
 End
 
 
-Pro pointarrayclass::cleanup
+Pro pointarrayclass_sazerac::cleanup
 
   Compile_opt idl2
   
@@ -50,7 +50,7 @@ Pro pointarrayclass::cleanup
 End
 
 
-Function pointarrayclass::x, id
+Function pointarrayclass_sazerac::x, id
 
   if n_elements(id) eq 0 then begin
   
@@ -68,7 +68,7 @@ End
 
 
 
-Function pointarrayclass::y, id
+Function pointarrayclass_sazerac::y, id
 
   if n_elements(id) eq 0 then begin
   
@@ -85,7 +85,7 @@ Function pointarrayclass::y, id
 End
 
 
-Function pointarrayclass::z, id
+Function pointarrayclass_sazerac::z, id
 
   if n_elements(id) eq 0 then begin
   
@@ -102,7 +102,7 @@ Function pointarrayclass::z, id
 End
 
 
-Function pointarrayclass::xyz, id
+Function pointarrayclass_sazerac::xyz, id
 
   if n_elements(id) eq 0 then begin
   
@@ -119,7 +119,7 @@ Function pointarrayclass::xyz, id
 End
 
 
-Function pointarrayclass::coordinateValueByIndex, i, j
+Function pointarrayclass_sazerac::coordinateValueByIndex, i, j
   
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -136,7 +136,7 @@ Function pointarrayclass::coordinateValueByIndex, i, j
 End
 
 
-Function pointarrayclass::setX, i, value
+Function pointarrayclass_sazerac::setX, i, value
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -150,7 +150,7 @@ End
 
 
 
-Function pointarrayclass::setY, i, value
+Function pointarrayclass_sazerac::setY, i, value
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -163,7 +163,7 @@ Function pointarrayclass::setY, i, value
 End
 
 
-Function pointarrayclass::setZ, i, value
+Function pointarrayclass_sazerac::setZ, i, value
 
   if i ge self.column then begin
     print, 'Column value outside of data range...'
@@ -176,13 +176,13 @@ Function pointarrayclass::setZ, i, value
 End
 
 
-Function pointarrayclass::extractPoint, pointId
+Function pointarrayclass_sazerac::extractPoint, pointId
 
   if pointId ge self.column then begin
     print, 'Column value outside of data range...'
     return, 0
   endif else begin
-    return, pointclass($
+    return, pointclass_sazerac($
                       self.coordinateValueByIndex(pointId,0) ,$
                       self.coordinateValueByIndex(pointId,1) ,$
                       self.coordinateValueByIndex(pointId,2)  $
@@ -192,7 +192,7 @@ Function pointarrayclass::extractPoint, pointId
 End
 
 
-Function pointarrayclass::findmin, $
+Function pointarrayclass_sazerac::findmin, $
                                                   INDEX = INDEX, $
                                                   X = X, Y = Y, Z = Z
 
@@ -202,13 +202,13 @@ if keyword_set(Z) then range = 2
 
 dum = min( (*self.pt)[*,range], minSub )
 
-if keyword_set(INDEX) then return, minsub else return, pointclass(self.xyz(minSub))
+if keyword_set(INDEX) then return, minsub else return, pointclass_sazerac(self.xyz(minSub))
 
 
 End
 
 
-Function pointarrayclass::findmax, $
+Function pointarrayclass_sazerac::findmax, $
   INDEX = INDEX, $
   X = X, Y = Y, Z = Z
 
@@ -218,13 +218,13 @@ Function pointarrayclass::findmax, $
 
   dum = max( (*self.pt)[*,range], maxSub )
 
-  if keyword_set(INDEX) then return, maxsub else return, pointclass(self.xyz(maxSub))
+  if keyword_set(INDEX) then return, maxsub else return, pointclass_sazerac(self.xyz(maxSub))
 
 
 End
 
 
-Function pointarrayclass::findaverage, $
+Function pointarrayclass_sazerac::findaverage, $
                                             INDEX = INDEX, $
                                             X = X, Y = Y, Z = Z
 
@@ -238,21 +238,21 @@ End
 
 
 
-Function pointarrayclass::addPointToArray, pt2
+Function pointarrayclass_sazerac::addPointToArray, pt2
 
 return, 1
 
 End
 
 
-Function pointarrayclass::removePointToArray, pointId
+Function pointarrayclass_sazerac::removePointToArray, pointId
 
 return, 1
 
 End
 
 
-Function pointarrayclass::addVector, vector
+Function pointarrayclass_sazerac::addVector, vector
 
   (*self.pt)[*,0] += vector.x()
   (*self.pt)[*,1] += vector.y()
@@ -262,7 +262,7 @@ Function pointarrayclass::addVector, vector
 End
 
 
-Function pointarrayclass::subVector, vector
+Function pointarrayclass_sazerac::subVector, vector
 
   (*self.pt)[*,0] -= vector.x()
   (*self.pt)[*,1] -= vector.y()
@@ -272,14 +272,14 @@ Function pointarrayclass::subVector, vector
 End
 
 
-Function pointarrayclass::sqrtDistance, point
+Function pointarrayclass_sazerac::sqrtDistance, point
 
   return, ( ((*self.pt)[*,0] - point.x())^2 + ((*self.pt)[*,1] - point.y())^2 + ((*self.pt)[*,2] - point.z())^2 )
   
 End
 
 
-Function pointarrayclass::distance, point
+Function pointarrayclass_sazerac::distance, point
 
   return, sqrt( self.sqrtDistance(point))
   
@@ -287,7 +287,7 @@ End
 
 
 
-Function pointarrayclass::orthogonalDistance, origin, vector
+Function pointarrayclass_sazerac::orthogonalDistance, origin, vector
 
   ; TBD - not finished as not method to compute dot in an array approach
   vec = self.makeVectorArray(origin)
@@ -298,9 +298,9 @@ End
 ;+
 ; This function should be called makeVectorArrayFromSinglePoint to make more sense
 ;-
-Function pointarrayclass::makeVectorArray, point2
+Function pointarrayclass_sazerac::makeVectorArray, point2
 
-  if strlowcase(obj_class(point2)) eq 'pointarrayclass' then begin
+  if strlowcase(obj_class(point2)) eq 'pointarrayclass_sazerac' then begin
     dum = self.makeVectorArrayFromPointArray(point2)
     return, dum
   endif else begin
@@ -314,9 +314,9 @@ Function pointarrayclass::makeVectorArray, point2
 End
 
 
-Function pointarrayclass::makeVectorArrayFromPointArray, point2
+Function pointarrayclass_sazerac::makeVectorArrayFromPointArray, point2
 
-  if strlowcase(obj_class(point2)) eq 'pointclass' then begin
+  if strlowcase(obj_class(point2)) eq 'pointclass_sazerac' then begin
     dum = self.makeVectorArray(point2)
     return, dum
   endif else begin
@@ -337,7 +337,7 @@ End
 
 ; With this function create a stack of vectorArray where each vectorArray holds the vectors from
 ;the points array to one point of point2 pointarray
-Function pointarrayclass::makeVectorArrayStackFromPointArray, point2
+Function pointarrayclass_sazerac::makeVectorArrayStackFromPointArray, point2
 
   dim = point2.getDim()
   oArr = objarr(dim)
@@ -345,9 +345,9 @@ Function pointarrayclass::makeVectorArrayStackFromPointArray, point2
   for i = 0, dim-1 do begin
     
     ; Extracing the boundary point
-    tempPoint = pointclass(point2.xyz(i))
-    ; Duplicating the pointclass to an pointArrayClass
-    ptArr = tempPoint.duplicateToPointArrayClass(self.getDim())
+    tempPoint = pointclass_sazerac(point2.xyz(i))
+    ; Duplicating the pointclass_sazerac to an pointarrayclass_sazerac
+    ptArr = tempPoint.duplicateTopointarrayclass_sazerac(self.getDim())
     ; Reseting the z coordinate for 'flat' vector
     dum = ptArr.transformTo2D()
     ; Creating the vectorArrayClass
@@ -362,14 +362,14 @@ End
 
 
 
-Function pointarrayclass::getDim
+Function pointarrayclass_sazerac::getDim
 
   return, n_elements((*self.pt)[*,0])
   
 End
 
 
-Function pointarrayclass::transformTo2D
+Function pointarrayclass_sazerac::transformTo2D
 
   (*self.pt)[*,2] = (*self.pt)[*,2] * 0.D
   return, 1
@@ -378,9 +378,9 @@ End
 
 
 
-Pro pointarrayclass__define
+Pro pointarrayclass_sazerac__define
 
-  void = {pointarrayclass, $
+  void = {pointarrayclass_sazerac, $
     pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
     column   : 0UL        ,$  ; number of columns in the array
     row      : 0          $  ; number of rows in the array

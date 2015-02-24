@@ -1,33 +1,33 @@
-Function bboxclass::init, inOne, inTwo
+Function bboxclass_sazerac::init, inOne, inTwo
 
   Compile_opt idl2
   
-;  if strlowcase(obj_class(inOne)) ne 'pointclass' then begin
-;    print, 'Please provide a point class object (pointclass) for the first argument...'
+;  if strlowcase(obj_class(inOne)) ne 'pointclass_sazerac' then begin
+;    print, 'Please provide a point class object (pointclass_sazerac) for the first argument...'
 ;    return, 0
 ;  endif
 ;  
-;  if strlowcase(obj_class(inTwo)) ne 'pointclass' then begin
-;    print, 'Please provide a point class object (pointclass) for the second argument...'
+;  if strlowcase(obj_class(inTwo)) ne 'pointclass_sazerac' then begin
+;    print, 'Please provide a point class object (pointclass_sazerac) for the second argument...'
 ;    return, 0
 ;  endif
   
   case n_params() of
     0: begin
-        self.ptMin = pointclass(!values.F_INFINITY, !values.F_INFINITY, !values.F_INFINITY)
-        self.ptMax = pointclass(-!values.F_INFINITY, -!values.F_INFINITY, -!values.F_INFINITY)
+        self.ptMin = pointclass_sazerac(!values.F_INFINITY, !values.F_INFINITY, !values.F_INFINITY)
+        self.ptMax = pointclass_sazerac(-!values.F_INFINITY, -!values.F_INFINITY, -!values.F_INFINITY)
       end
     1: begin
           self.ptMin = inOne
-          self.ptMax = pointclass(-!values.F_INFINITY, -!values.F_INFINITY, -!values.F_INFINITY)
+          self.ptMax = pointclass_sazerac(-!values.F_INFINITY, -!values.F_INFINITY, -!values.F_INFINITY)
       end
     2: begin 
         if obj_valid(inOne) eq 0 or obj_valid(inTwo) eq 0 then begin
-          print, 'Please provide a point class object (pointclass)...'
+          print, 'Please provide a point class object (pointclass_sazerac)...'
           return, 0
         endif else begin
-        self.ptMin = pointclass( inOne.x() < inTwo.x(), inOne.y() < inTwo.y(), inOne.z() < inTwo.z() )
-        self.ptMax = pointclass( inOne.x() > inTwo.x(), inOne.y() > inTwo.y(), inOne.z() > inTwo.z() )
+        self.ptMin = pointclass_sazerac( inOne.x() < inTwo.x(), inOne.y() < inTwo.y(), inOne.z() < inTwo.z() )
+        self.ptMax = pointclass_sazerac( inOne.x() > inTwo.x(), inOne.y() > inTwo.y(), inOne.z() > inTwo.z() )
         endelse
       end
     else: print, 'Hummm... something went wrong...'
@@ -39,7 +39,7 @@ Function bboxclass::init, inOne, inTwo
 End
 
 
-Pro bboxclass::cleanup
+Pro bboxclass_sazerac::cleanup
 
   Compile_opt idl2
   
@@ -49,28 +49,28 @@ Pro bboxclass::cleanup
 End
 
 
-Function bboxclass::getptMin
+Function bboxclass_sazerac::getptMin
 
   return, self.ptMin
   
 End
 
 
-Function bboxclass::getptMax
+Function bboxclass_sazerac::getptMax
 
   return, self.ptMax
   
 End
 
 
-Function bboxclass::getBox
+Function bboxclass_sazerac::getBox
 
   return, [self.ptMin, self.ptMax]
   
 End
 
 
-Function bboxclass::setptMin, point
+Function bboxclass_sazerac::setptMin, point
 
   self.ptMin = point
   return, 1
@@ -78,7 +78,7 @@ Function bboxclass::setptMin, point
 End
 
 
-Function bboxclass::setptMax, point
+Function bboxclass_sazerac::setptMax, point
 
   self.ptMax = point
   return, 1
@@ -86,21 +86,21 @@ Function bboxclass::setptMax, point
 End
 
 
-Function bboxclass::unionWithPoint, point
+Function bboxclass_sazerac::unionWithPoint, point
 
-  if obj_class(point) ne strupcase('pointclass') then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if obj_class(point) ne strupcase('pointclass_sazerac') then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
-    newbox = bboxclass
+    newbox = bboxclass_sazerac
     tminX = ( (self.ptMin).x() < point.x() )
     tminY = ( (self.ptMin).y() < point.y() )
     tminZ = ( (self.ptMin).z() < point.z() )
     tmaxX = ( (self.ptMax).x() > point.x() )
     tmaxY = ( (self.ptMax).y() > point.y() )
     tmaxZ = ( (self.ptMax).z() > point.z() )
-    dum = newbox.setptMin( pointclass( tminX, tminY, tminZ ) )
-    dum = newbox.setPtMax( pointclass( tmaxX, tmaxY, tmaxZ ) )
+    dum = newbox.setptMin( pointclass_sazerac( tminX, tminY, tminZ ) )
+    dum = newbox.setPtMax( pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
   endelse
   
   return, newbox
@@ -108,21 +108,21 @@ Function bboxclass::unionWithPoint, point
 End
 
 
-Function bboxclass::unionWithBox, box
+Function bboxclass_sazerac::unionWithBox, box
 
-  if obj_class(box) ne strupcase('bboxclass') then begin
-    print, 'Please provide a bounding box class object (bboxclass)...'
+  if obj_class(box) ne strupcase('bboxclass_sazerac') then begin
+    print, 'Please provide a bounding box class object (bboxclass_sazerac)...'
     return, 0
   endif else begin
-    newbox = bboxclass
+    newbox = bboxclass_sazerac
     tminX = ( (self.ptMin).x() < (box.getptMin()).x() )
     tminY = ( (self.ptMin).y() < (box.getptMin()).y() )
     tminZ = ( (self.ptMin).z() < (box.getptMin()).z() )
     tmaxX = ( (self.ptMax).x() > (box.getptMax()).x() )
     tmaxY = ( (self.ptMax).y() > (box.getptMax()).y() )
     tmaxZ = ( (self.ptMax).z() > (box.getptMax()).z() )
-    dum = newbox.setptMin( pointclass( tminX, tminY, tminZ ) )
-    dum = newbox.setPtMax( pointclass( tmaxX, tmaxY, tmaxZ ) )
+    dum = newbox.setptMin( pointclass_sazerac( tminX, tminY, tminZ ) )
+    dum = newbox.setPtMax( pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
   endelse
   
   return, newbox
@@ -130,10 +130,10 @@ Function bboxclass::unionWithBox, box
 End
 
 
-Function bboxclass::overlapping, box
+Function bboxclass_sazerac::overlapping, box
 
-  if obj_class(box) ne strupcase('bboxclass') then begin
-    print, 'Please provide a bounding box class object (bboxclass)...'
+  if obj_class(box) ne strupcase('bboxclass_sazerac') then begin
+    print, 'Please provide a bounding box class object (bboxclass_sazerac)...'
     return, 0
   endif else begin
     return, ($
@@ -146,10 +146,10 @@ Function bboxclass::overlapping, box
 End
 
 
-Function bboxclass::pointInside, point
+Function bboxclass_sazerac::pointInside, point
 
-  if obj_class(point) ne strupcase('pointclass') then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if obj_class(point) ne strupcase('pointclass_sazerac') then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     return, ($
@@ -166,7 +166,7 @@ End
 ; This function extend/pad the bounding box by a fix value across all
 ; the dimensions.
 ;-
-Function bboxclass::pad, vector2
+Function bboxclass_sazerac::pad, vector2
 
   if obj_class(vector2) ne strupcase('vectorclass') then begin
     print, 'Please provide a vector class object (vectorclass)...'
@@ -183,7 +183,7 @@ End
 ;+
 ;This function returns a float value
 ;-
-Function bboxclass::surfaceArea
+Function bboxclass_sazerac::surfaceArea
 
   temp = (self.ptMin).makeVector(self.ptMax)
   return, 2. * (temp.x() *temp.y() + temp.x() * temp.z() + temp.y() * temp.z() )
@@ -195,7 +195,7 @@ End
 ; This function returns the volume of the bounding box in world units.
 ; This function returns a float value
 ;-
-Function bboxclass::boxVolume
+Function bboxclass_sazerac::boxVolume
 
   temp = (self.ptMin).makeVector(self.ptMax)
   return, temp.x() *temp.y() * temp.z()
@@ -207,7 +207,7 @@ End
 ; This function computes the longest dimension of the bounding box
 ; It will return 0 for x, 1 for y and 2 for z.
 ;-
-Function bboxclass::maximumExtend
+Function bboxclass_sazerac::maximumExtend
 
   diag = (self.ptMin).makeVector(self.ptMax)
   if diag.x() lt diag.y() and diag.x() gt diag.z() then return, 0
@@ -216,13 +216,13 @@ Function bboxclass::maximumExtend
 End
 
 
-Function bboxclass::interpolatePoint, point
+Function bboxclass_sazerac::interpolatePoint, point
 
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
-    return, pointclass(lerp(point.x(),(self.ptMin).x(),(self.ptMax).x()), $
+    return, pointclass_sazerac(lerp(point.x(),(self.ptMin).x(),(self.ptMax).x()), $
                        lerp(point.y(),(self.ptMin).y(),(self.ptMax).y()), $
                        lerp(point.z(),(self.ptMin).z(),(self.ptMax).z())  $
                        )
@@ -231,10 +231,10 @@ Function bboxclass::interpolatePoint, point
 End
 
 
-Function bboxclass::offset, point
+Function bboxclass_sazerac::offset, point
 
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     return, vectorclass($
@@ -247,7 +247,7 @@ Function bboxclass::offset, point
 End
 
 
-Function bboxclass::returnCornerAsArray
+Function bboxclass_sazerac::returnCornerAsArray
   ta = (self.ptMin).xyz()
   tb = (self.ptMax).xyz()
   return, [ta, tb]
@@ -255,16 +255,16 @@ Function bboxclass::returnCornerAsArray
 End
 
 
-Function bboxclass::boundingSphere
+Function bboxclass_sazerac::boundingSphere
 
-  c = pointclass( (.5 * (self.ptMin).xyz()) + (.5 * (self.ptMax).xyz()) )
+  c = pointclass_sazerac( (.5 * (self.ptMin).xyz()) + (.5 * (self.ptMax).xyz()) )
   rad = self.pointInside(c) ? c.distance(self.ptMax) : 0.0
   return, [c, rad]
 
 End
 
 
-Function bboxclass::intersectP, ray, hitt0, hitt1
+Function bboxclass_sazerac::intersectP, ray, hitt0, hitt1
 
   t0 = (ray.getMint()).xyz()
   t1 = (ray.getMaxt()).xyz()
@@ -297,11 +297,11 @@ End
 
 
 
-Pro bboxclass__define
+Pro bboxclass_sazerac__define
 
-  void = {bboxclass, $
-    ptMin   : pointclass ,$
-    ptMax   : pointclass $
+  void = {bboxclass_sazerac, $
+    ptMin   : pointclass_sazerac ,$
+    ptMax   : pointclass_sazerac $
   }
 
 End

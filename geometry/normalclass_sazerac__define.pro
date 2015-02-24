@@ -1,4 +1,4 @@
-Function normalclass::init, cox, coy, coz
+Function normalclass_sazerac::init, cox, coy, coz
 
   Compile_opt idl2
 ;  print, n_params()
@@ -30,14 +30,14 @@ Function normalclass::init, cox, coy, coz
 End
 
 
-Pro normalclass::cleanup
+Pro normalclass_sazerac::cleanup
 
   Compile_opt idl2
   
 End
 
 
-Function normalclass::x
+Function normalclass_sazerac::x
 
   return, self.vx
   
@@ -45,28 +45,28 @@ End
 
 
 
-Function normalclass::y
+Function normalclass_sazerac::y
 
   return, self.vy
   
 End
 
 
-Function normalclass::z
+Function normalclass_sazerac::z
 
   return, self.vz
   
 End
 
 
-Function normalclass::xyz
+Function normalclass_sazerac::xyz
 
   return, [self.vx, self.vy, self.vz]
   
 End
 
 
-Pro normalclass::setX, value
+Pro normalclass_sazerac::setX, value
 
   self.vx = value
   ;return, 'done'
@@ -75,7 +75,7 @@ End
 
 
 
-Pro normalclass::setY, value
+Pro normalclass_sazerac::setY, value
 
   self.vy = value
   ;return, 'done'
@@ -83,7 +83,7 @@ Pro normalclass::setY, value
 End
 
 
-Pro normalclass::setZ, value
+Pro normalclass_sazerac::setZ, value
 
   self.vz = value
   ;return, 'done'
@@ -91,30 +91,30 @@ Pro normalclass::setZ, value
 End
 
 
-Function normalclass::translate, normalclass
+Function normalclass_sazerac::translate, normalclass_sazerac
 
-  self.vx += normalclass.x()
-  self.vy += normalclass.y()
-  self.vz += normalclass.z()
+  self.vx += normalclass_sazerac.x()
+  self.vy += normalclass_sazerac.y()
+  self.vz += normalclass_sazerac.z()
   return, [self.vx, self.vy, self.vz]
 
 End
 
 
-Function normalclass::scaleUp, normalclass
+Function normalclass_sazerac::scaleUp, normalclass_sazerac
 
-  self.vx *= normalclass.x()
-  self.vy *= normalclass.y()
-  self.vz *= normalclass.z()
+  self.vx *= normalclass_sazerac.x()
+  self.vy *= normalclass_sazerac.y()
+  self.vz *= normalclass_sazerac.z()
   return, [self.vx, self.vy, self.vz]
 
 
 End
 
 
-Function normalclass::scaleDown, normalclass
+Function normalclass_sazerac::scaleDown, normalclass_sazerac
 
-  temp = 1. / normalclass.xyz()
+  temp = 1. / normalclass_sazerac.xyz()
   self.vx *= temp[0]
   self.vy *= temp[1]
   self.vz *= temp[2]
@@ -124,21 +124,21 @@ Function normalclass::scaleDown, normalclass
 End
 
 
-Function normalclass::opposite
+Function normalclass_sazerac::opposite
 
   return, [-self.vx, -self.vy, -self.vz]
 
 End
 
 
-Function normalclass::length
+Function normalclass_sazerac::length
 
   return, sqrt( (self.vx)^2 + (self.vy)^2 + (self.vz)^2 )
   
 end
 
 
-Pro normalclass::normalizeLength
+Pro normalclass_sazerac::normalizeLength
 
   inv = 1. / self.length()
   self.vx *= inv
@@ -148,7 +148,7 @@ Pro normalclass::normalizeLength
 End
 
 
-Function normalclass::getNormLength
+Function normalclass_sazerac::getNormLength
 
   inv = 1. / self.length()
   return, ( [self.vx, self.vy, self.vz] * inv )
@@ -156,7 +156,7 @@ Function normalclass::getNormLength
 End
 
 
-Function normalclass::dot, vector2
+Function normalclass_sazerac::dot, vector2
 
   dot = (self.vx * vector2.x()) + (self.vy * vector2.y()) + (self.vz * vector2.z())
   return, dot
@@ -164,21 +164,21 @@ Function normalclass::dot, vector2
 End
 
 
-Function normalclass::getRadAngle, vector2
+Function normalclass_sazerac::getRadAngle, vector2
 
   return, acos( self.dot(vector2) / ( self.length() * vector2.length() ) )
   
 End
 
 
-Function normalclass::getDegAngle, vector2
+Function normalclass_sazerac::getDegAngle, vector2
 
   return, 180./!PI * acos( self.dot(vector2) / ( self.length() * vector2.length() ) )
   
 End
 
 
-Function normalclass::det, vector2
+Function normalclass_sazerac::det, vector2
 
   detX = (self.vy * vector2.z()) - (self.vz * vector2.y())
   detY = (self.vz * vector2.x()) - (self.vx * vector2.z())
@@ -188,9 +188,9 @@ Function normalclass::det, vector2
 End
 
 
-Function normalclass::paralVolume, vector2
+Function normalclass_sazerac::paralVolume, vector2
 
-  tempvec = normalclass(self.det(vector2))
+  tempvec = normalclass_sazerac(self.det(vector2))
   return, tempvec.length()
 
 End
@@ -201,22 +201,22 @@ End
 ; based on the vector hold in self.
 ; 
 ; IDL> print, vec6.localCoordinateSystem()
-; <ObjHeapVar6(normalclass)><ObjHeapVar7(normalclass)>
+; <ObjHeapVar6(normalclass_sazerac)><ObjHeapVar7(normalclass_sazerac)>
 ; IDL> t = vec6.localCoordinateSystem()
 ; IDL> print, t[0].xyz()
 ; 0.0000000     0.062378287     -0.99805260
 ;-
-Function normalclass::localCoordinateSystem
+Function normalclass_sazerac::localCoordinateSystem
 
   if self.vx gt self.vy then begin
     invLen = 1. / sqrt( (self.vx)^2 + (self.vz)^2 )
-    v2 = normalclass(-self.vz * invLen, 0., self.vx * invLen)
+    v2 = normalclass_sazerac(-self.vz * invLen, 0., self.vx * invLen)
   endif else begin
     invLen = 1. / sqrt( (self.vy)^2 + (self.vz)^2 )
-    v2 = normalclass(0., self.vz * invLen, -self.vy * invLen) 
+    v2 = normalclass_sazerac(0., self.vz * invLen, -self.vy * invLen) 
   endelse
   
-  v3 = normalclass(self.det(v2))
+  v3 = normalclass_sazerac(self.det(v2))
 
   ;with this line the 3 vectors coordinates are return
   ;return, [ [self.xyz()],[v2.xyz()],[v3.xyz()] ] 
@@ -227,9 +227,9 @@ Function normalclass::localCoordinateSystem
 End
 
 
-Pro normalclass__define
+Pro normalclass_sazerac__define
 
-  void = {normalclass, $
+  void = {normalclass_sazerac, $
     vx    : 0. ,$
     vy    : 0. ,$
     vz    : 0. $

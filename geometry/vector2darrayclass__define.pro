@@ -155,7 +155,7 @@ Function vector2darrayclass::extractPoint, pointId
     print, 'Column value outside of data range...'
     return, 0
   endif else begin
-    return, pointclass($
+    return, pointclass_sazerac($
                       self.coordinateValueByIndex(pointId,0) ,$
                       self.coordinateValueByIndex(pointId,1) ,$
                       self.coordinateValueByIndex(pointId,2)  $

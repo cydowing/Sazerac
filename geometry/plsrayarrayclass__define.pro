@@ -82,7 +82,7 @@ Function plsrayarrayclass::traceRay, t
 ;  print, (self.origin).xyz()
 ;  print, (self.direction).xyz()
   temp = [ (self.origin).xyz() + (replicate(t,3) * (self.direction).xyz() ) ]
-  return, pointarrayclass( temp )
+  return, pointarrayclass_sazerac( temp )
 
 End
 
@@ -91,7 +91,7 @@ End
 Pro plsrayarrayclass__define
 
   void = {plsrayarrayclass, $
-    origin    : pointclass(),$        ; Origin of the pluse = Anchor point
+    origin    : pointclass_sazerac(),$        ; Origin of the pluse = Anchor point
     direction : vectorclass(),$       ; Direction of the pulse = Normalized Anchor to Target vector
     n         : ptr_new(),$         ; Pointer to the number of samples per pulse segment,  concatenated into an single array
     pulse     : ptr_new(),$         ; Pointer to the wavefrom values concatenated together

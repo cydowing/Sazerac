@@ -4,15 +4,15 @@ Function rayclass::init, orig, dir, mint, maxt
   
   case n_params() of
     0: begin
-        self.origin = pointclass()
+        self.origin = pointclass_sazerac()
         self.direction = vectorclass()
       end
     1: begin
       if strlowcase(obj_class(orig)) eq 'vectorclass' then begin
-          self.origin = pointclass()
+          self.origin = pointclass_sazerac()
           self.direction = orig
       endif 
-      if strlowcase(obj_class(orig)) eq 'pointclass' then begin
+      if strlowcase(obj_class(orig)) eq 'pointclass_sazerac' then begin
           self.origin = orig
           self.direction = vectorclass()
       endif
@@ -158,7 +158,7 @@ Function rayclass::traceRay, t
 ;  print, (self.origin).xyz()
 ;  print, (self.direction).xyz()
   temp = [ (self.origin).xyz() + (replicate(t,3) * (self.direction).xyz() ) ]
-  return, pointclass( temp )
+  return, pointclass_sazerac( temp )
 
 End
 
@@ -167,7 +167,7 @@ End
 Pro rayclass__define
 
   void = {rayclass, $
-    origin    : pointclass(),$
+    origin    : pointclass_sazerac(),$
     direction : vectorclass(),$
     mint      : 0.D,$
     maxt      : 0.D,$

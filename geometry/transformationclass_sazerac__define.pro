@@ -1,4 +1,4 @@
-Function transformationclass::init, matrix, invmatrix
+Function transformationclass_sazerac::init, matrix, invmatrix
 
   Compile_opt idl2
 ;  if n_elements(a) ne 0 then print, a
@@ -49,7 +49,7 @@ Function transformationclass::init, matrix, invmatrix
 End
 
 
-Pro transformationclass::cleanup
+Pro transformationclass_sazerac::cleanup
 
   Compile_opt idl2
   
@@ -59,23 +59,23 @@ Pro transformationclass::cleanup
 End
 
 
-Function transformationclass::getMatrix
+Function transformationclass_sazerac::getMatrix
 
   return, self.matrix
   
 End
 
 
-Function transformationclass::getInvMatrix
+Function transformationclass_sazerac::getInvMatrix
 
   return, self.invmatrix
   
 End
 
 
-Function transformationclass::invertTransformation
+Function transformationclass_sazerac::invertTransformation
 
-  return, transformationclass(self.invmatrix, self.matrix)
+  return, transformationclass_sazerac(self.invmatrix, self.matrix)
   
 End
 
@@ -85,10 +85,10 @@ End
 ; It just consider that the substration of the two transformation matrix
 ; should gives a null matrix ?!
 ;-
-Function transformationclass::transformEquality, transform
+Function transformationclass_sazerac::transformEquality, transform
 
-  if strlowcase(obj_class(transform)) ne 'transformationclass' then begin
-    print, 'Please provide a transformation class object (transformationclass)...'
+  if strlowcase(obj_class(transform)) ne 'transformationclass_sazerac' then begin
+    print, 'Please provide a transformation class object (transformationclass_sazerac)...'
     return, 0
   endif else begin
     if total( self.matrix - transform.getmatrix() ) eq 0 then return, 1 else return, 0
@@ -102,14 +102,14 @@ End
 ; It just consider that the substration of the two transformation matrix
 ; should gives a null matrix ?!
 ;-
-Function transformationclass::isIdentity
+Function transformationclass_sazerac::isIdentity
 
   if total( self.matrix - identity(4) ) eq 0 then return, 1 else return, 0
   
 End
 
 
-Function transformationclass::translate, vector2
+Function transformationclass_sazerac::translate, vector2
 
   if strlowcase(obj_class(vector2)) ne 'vectorclass' then begin
     print, 'Please provide a vector class object (vectorclass)...'
@@ -127,13 +127,13 @@ Function transformationclass::translate, vector2
       [ 0, 0, 1, -vector2.z() ],$
       [ 0, 0, 0, 1 ] $
       ]
-    return, transformationclass(matrix, invmatrix)
+    return, transformationclass_sazerac(matrix, invmatrix)
   endelse
   
 End
 
 
-Function transformationclass::scale, sx, sy, sz
+Function transformationclass_sazerac::scale, sx, sy, sz
 
   if n_params() ne 3 then begin
     print, 'Please provide one scale value for each axis...'
@@ -151,7 +151,7 @@ Function transformationclass::scale, sx, sy, sz
       [ 0, 0, 1./sz, 0 ],$
       [ 0, 0, 0, 1 ] $
       ]
-    return, transformationclass(matrix, invmatrix)
+    return, transformationclass_sazerac(matrix, invmatrix)
   endelse
   
 End
@@ -161,7 +161,7 @@ End
 ; Unifinished method as I'm not sure what the exact implementation is
 ; from book physically based rendering, p.80
 ;-
-Function transformationclass::hasScale
+Function transformationclass_sazerac::hasScale
 
   la2 = ( self.matrix * (vectorclass(1,0,0)).squareLength() )
   print, la2
@@ -175,7 +175,7 @@ Function transformationclass::hasScale
 End
 
 
-Function transformationclass::rotateX, angle
+Function transformationclass_sazerac::rotateX, angle
 
   if n_params() ne 1 then begin
     print, 'Please provide one rotation angle...'
@@ -189,12 +189,12 @@ Function transformationclass::rotateX, angle
       [ 0, tsin, tcos,  0 ],$
       [ 0, 0, 0, 1 ] $
       ]
-    return, transformationclass(matrix, transpose(matrix))
+    return, transformationclass_sazerac(matrix, transpose(matrix))
   endelse
 End
 
 
-Function transformationclass::rotateY, angle
+Function transformationclass_sazerac::rotateY, angle
 
   if n_params() ne 1 then begin
     print, 'Please provide one rotation angle...'
@@ -208,12 +208,12 @@ Function transformationclass::rotateY, angle
       [ -tsin, 0, tcos, 0 ],$
       [ 0, 0, 0, 1 ] $
       ]
-    return, transformationclass(matrix, transpose(matrix))
+    return, transformationclass_sazerac(matrix, transpose(matrix))
    endelse
   
 End
 
-Function transformationclass::rotateZ, angle
+Function transformationclass_sazerac::rotateZ, angle
 
   if n_params() ne 1 then begin
     print, 'Please provide one rotation angle...'
@@ -227,13 +227,13 @@ Function transformationclass::rotateZ, angle
       [ 0, 0, 1, 0 ],$
       [ 0, 0, 0, 1 ] $
       ]
-    return, transformationclass(matrix, transpose(matrix))
+    return, transformationclass_sazerac(matrix, transpose(matrix))
    endelse
    
 End
 
 
-Function transformationclass::rotateAnyAxis, angle, vecAxis
+Function transformationclass_sazerac::rotateAnyAxis, angle, vecAxis
 
   if n_elements(angle) eq 0 then begin
     print, 'Please provide an angle value...'
@@ -269,22 +269,22 @@ Function transformationclass::rotateAnyAxis, angle, vecAxis
   mat[2,3] = 0
   mat[3,3] = 1
   
-  return, transformationclass(mat, transpose(mat))
+  return, transformationclass_sazerac(mat, transpose(mat))
 End
 
 
-Function transformationclass::lookAt, camPos, camAim, upVec
+Function transformationclass_sazerac::lookAt, camPos, camAim, upVec
   
   if n_params() ne 3 then begin
     print, 'Please provide three values...'
     return, 0
   endif
-  if strlowcase(obj_class(camPos)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(camPos)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif
-  if strlowcase(obj_class(camAim)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(camAim)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif
   if strlowcase(obj_class(upVec)) ne 'vectorclass' then begin
@@ -330,7 +330,7 @@ Function transformationclass::lookAt, camPos, camAim, upVec
   print, 'Matrice inverse...'
   print, mat
   
-  return, transformationclass(invert(mat), mat)
+  return, transformationclass_sazerac(invert(mat), mat)
   
 
 End
@@ -340,14 +340,14 @@ End
 ; This function transform a 3 coordinates point into a 4 coordinates point
 ; by adding an homogeneous weight (1 by default)
 ;-
-Function transformationclass::transfPoint, point, weight
+Function transformationclass_sazerac::transfPoint, point, weight
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     if n_elements(weight) ne 0 then p = transpose([point.xyz(),weight]) $
@@ -362,7 +362,7 @@ End
 ; This function transform a 3 coordinates point into a 4 coordinates point
 ; by adding an homogeneous weight (1 by default)
 ;-
-Function transformationclass::transfVector, vec, weight
+Function transformationclass_sazerac::transfVector, vec, weight
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -384,14 +384,14 @@ End
 ; This function transform a 3 coordinates point into a 4 coordinates point
 ; by adding an homogeneous weight (1 by default)
 ;-
-Function transformationclass::transfPointArray, point, weight
+Function transformationclass_sazerac::transfPointArray, point, weight
 
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
 ;    return, 0
 ;  endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     temp = size(point.xyz(),/dimensions)
@@ -413,7 +413,7 @@ End
 ; This function transform a 3 coordinates point into a 4 coordinates point
 ; by adding an homogeneous weight (1 by default)
 ;-
-Function transformationclass::transfVectorArray, vec, weight
+Function transformationclass_sazerac::transfVectorArray, vec, weight
 
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
@@ -438,14 +438,14 @@ Function transformationclass::transfVectorArray, vec, weight
 End
 
 
-Function transformationclass::pointTransform, point
+Function transformationclass_sazerac::pointTransform, point
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPoint(point)
@@ -458,20 +458,20 @@ Function transformationclass::pointTransform, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, pointclass(newx, newy, newz) else return, pointclass( ([newx, newy, newz]*invw) )
+    if w eq 1 then return, pointclass_sazerac(newx, newy, newz) else return, pointclass_sazerac( ([newx, newy, newz]*invw) )
   endelse
   
 End
 
 
-Function transformationclass::pointTransformWithPtr, point
+Function transformationclass_sazerac::pointTransformWithPtr, point
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointclass' then begin
-    print, 'Please provide a point class object (pointclass)...'
+  if strlowcase(obj_class(point)) ne 'pointclass_sazerac' then begin
+    print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPoint(point)
@@ -484,21 +484,21 @@ Function transformationclass::pointTransformWithPtr, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, ptr_new(pointclass(newx, newy, newz)) else return, ptr_new(pointclass( ([newx, newy, newz]*invw) ))
+    if w eq 1 then return, ptr_new(pointclass_sazerac(newx, newy, newz)) else return, ptr_new(pointclass_sazerac( ([newx, newy, newz]*invw) ))
   endelse
   
 End
 
 
 ;-
-Function transformationclass::pointArrayTransform, point
+Function transformationclass_sazerac::pointArrayTransform, point
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPointArray(point)
@@ -511,20 +511,20 @@ Function transformationclass::pointArrayTransform, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w[0] eq 1 then return, pointarrayclass(newx, newy, newz) else return, pointarrayclass( ([[newx],[newy], [newz]]*invw) )
+    if w[0] eq 1 then return, pointarrayclass_sazerac(newx, newy, newz) else return, pointarrayclass_sazerac( ([[newx],[newy], [newz]]*invw) )
   endelse
   
 End
 
 
-Function transformationclass::pointArrayTransformWithPtr, point
+Function transformationclass_sazerac::pointArrayTransformWithPtr, point
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(point)) ne 'pointarrayclass' then begin
-    print, 'Please provide a point array class object (pointarrayclass)...'
+  if strlowcase(obj_class(point)) ne 'pointarrayclass_sazerac' then begin
+    print, 'Please provide a point array class object (pointarrayclass_sazerac)...'
     return, 0
   endif else begin
     p = self.transfPointArray(point)
@@ -537,7 +537,7 @@ Function transformationclass::pointArrayTransformWithPtr, point
     newy = self.matrix[0,1] * x + self.matrix[1,1] * y + self.matrix[2,1] * z + self.matrix[3,1] * w
     newz = self.matrix[0,2] * x + self.matrix[1,2] * y + self.matrix[2,2] * z + self.matrix[3,2] * w
     neww = self.matrix[0,3] * x + self.matrix[1,3] * y + self.matrix[2,3] * z + self.matrix[3,3] * w
-    if w eq 1 then return, ptr_new(pointarrayclass(newx, newy, newz)) else return, ptr_new(pointarrayclass(([newx, newy, newz]*invw)))
+    if w eq 1 then return, ptr_new(pointarrayclass_sazerac(newx, newy, newz)) else return, ptr_new(pointarrayclass_sazerac(([newx, newy, newz]*invw)))
   endelse
   
 End
@@ -546,7 +546,7 @@ End
 ;############################
 ; ORIGINAL METHOD
 ;############################
-;Function transformationclass::vectorTransform, vec2
+;Function transformationclass_sazerac::vectorTransform, vec2
 ;
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
@@ -569,7 +569,7 @@ End
 ;End
 ;
 ;
-;Function transformationclass::vectorTransformWithPtr, vec2
+;Function transformationclass_sazerac::vectorTransformWithPtr, vec2
 ;
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
@@ -599,7 +599,7 @@ End
 ; It should handle the vectorclass and vectorarrayclass seamlessly
 ; to be test...
 ;-
-Function transformationclass::vectorTransform, vec2
+Function transformationclass_sazerac::vectorTransform, vec2
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -630,7 +630,7 @@ Function transformationclass::vectorTransform, vec2
 End
 
 
-Function transformationclass::vectorTransformWithPtr, vec2
+Function transformationclass_sazerac::vectorTransformWithPtr, vec2
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -665,7 +665,7 @@ End
 
 
 ;-
-;Function transformationclass::vectorArrayTransform, vec2
+;Function transformationclass_sazerac::vectorArrayTransform, vec2
 ;
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
@@ -688,7 +688,7 @@ End
 ;End
 ;
 ;
-;Function transformationclass::vectorArrayTransformWithPtr, vec2
+;Function transformationclass_sazerac::vectorArrayTransformWithPtr, vec2
 ;
 ;  if n_params() ne 1 then begin
 ;    print, 'Please provide a value...'
@@ -715,7 +715,7 @@ End
 ;-
 ; This function should handle normalclass
 ;-
-Function transformationclass::normalTransform, normVec
+Function transformationclass_sazerac::normalTransform, normVec
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -738,7 +738,7 @@ Function transformationclass::normalTransform, normVec
 End
 
 
-Function transformationclass::rayTransform, ray2
+Function transformationclass_sazerac::rayTransform, ray2
 
   if n_params() ne 1 then begin
     print, 'Please provide one value...'
@@ -756,7 +756,7 @@ Function transformationclass::rayTransform, ray2
 End
 
 
-Function transformationclass::diffRayTransform, ray2
+Function transformationclass_sazerac::diffRayTransform, ray2
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -774,7 +774,7 @@ Function transformationclass::diffRayTransform, ray2
 End
 
 
-Function transformationclass::transformBBox, bBox
+Function transformationclass_sazerac::transformBBox, bBox
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
@@ -793,42 +793,42 @@ Function transformationclass::transformBBox, bBox
 End
 
 
-Function transformationclass::multiplyTransform, transf2
+Function transformationclass_sazerac::multiplyTransform, transf2
 
   if n_params() ne 1 then begin
     print, 'Please provide a value...'
     return, 0
   endif
-  if strlowcase(obj_class(transf2)) ne 'transformationclass' then begin
-    print, 'Please provide a transformation class object (transformationclass)...'
+  if strlowcase(obj_class(transf2)) ne 'transformationclass_sazerac' then begin
+    print, 'Please provide a transformation class object (transformationclass_sazerac)...'
     return, 0
   endif else begin
     m1 = self.getMatrix() ## transf2.getMatrix()
     m2 = transf2.getInvMatrix() ## self.getInvMatrix()
-    return, transformationclass(m1, m2)
+    return, transformationclass_sazerac(m1, m2)
   endelse
 
 End
 
 
-Function transformationclass::swapsHandeness
+Function transformationclass_sazerac::swapsHandeness
 
   return, determ( (self.getMatrix())[0:2,0:2] ) lt 0.0
   
 End
 
 
-Function transformationclass::orthographic, zNer, zFar
+Function transformationclass_sazerac::orthographic, zNer, zFar
 
-  tempTrsfrm = transformationclass()
+  tempTrsfrm = transformationclass_sazerac()
   tempScale = vectorclass( [1., 1., 1.] / (zFar-Fnear) )
   tempTrans = vectorclass( 0., 0., -zNear )
-  return, transformationclass( (tempTrsfrm.scale(tempScale)).getMatrix() * (tempTrsfrm.translate(tempTrans)).getMatrix() )
+  return, transformationclass_sazerac( (tempTrsfrm.scale(tempScale)).getMatrix() * (tempTrsfrm.translate(tempTrans)).getMatrix() )
   
 End
 
 
-Function transformationclass::perspective, fov, n, f
+Function transformationclass_sazerac::perspective, fov, n, f
 
   tpersp = [$
           [1.0, 0.0, 0.0, 0.0],$
@@ -837,16 +837,16 @@ Function transformationclass::perspective, fov, n, f
           [0.0, 0.0, 1.0, 0.0] $
           ]
    invTanAng = 1.0 / tan( (!dtor * fov) / 2.0)
-   persp = transformationclass(tpersp)
+   persp = transformationclass_sazerac(tpersp)
    return, persp.scale(invTanAng, invTanAng, 1.0)
 
 End
 
  
 
-Pro transformationclass__define
+Pro transformationclass_sazerac__define
 
-  void = {transformationclass, $
+  void = {transformationclass_sazerac, $
     matrix    : dblarr(4,4) ,$
     invmatrix : dblarr(4,4)  $
   }
