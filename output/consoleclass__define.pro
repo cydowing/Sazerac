@@ -87,15 +87,30 @@ Pro consoleclass::help
 End
 
 
-; Function to output information on Log in the GUI
+; Function to output information on GUI console
 Pro consoleclass::printLog, pointerState, code, stringText
 
 codeString = ["::","INFO","WARNING","ERROR"]
 tempString = string(codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)')
-print, tempString
-widget_control, (*pointerState).wtLog, set_value=tempString,/APPEND
+
+widget_control, (*pointerState).wtLog, set_value=tempString, /APPEND
 
 End
+
+; Function to output array information on GUI console
+Pro consoleclass::printLogArray, pointerState, code, stringArray
+
+  codeString = ["::","INFO","WARNING","ERROR"]
+
+  n = n_elements(stringArray)
+  stringFormat= '(a-7,tr1,a2,tr3,'+string(n)+'(a, :, ", "))'
+  s = STRING(codeString[code], codeString[0], stringArray, FORMAT = stringFormat)
+  widget_control, (*pointerState).wtLog, set_value=s, /APPEND
+
+End
+
+
+
 
 
 
