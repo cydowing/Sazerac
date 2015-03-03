@@ -1,11 +1,8 @@
 Function consoleclass::init, _extra = console_options
 
-  Compile_opt idl2
-  
-;print, console_options
-;print, tag_names(console_options)
-; default mode
-;  if Keyword_set(default) then self.Consolesetup = 0
+  Compile_opt idl2, hidden
+ 
+self.wID = 9999
 
 if n_elements(console_options) gt 0 then begin
 
@@ -33,7 +30,7 @@ if n_elements(console_options) gt 0 then begin
         Openw, Lun, self.LogPath, /get_lun
         self.Consolelun = Lun
         self.Consolesetup = 1
-        self.print, 2, 'Log file mode enable'
+        self.print, 2, 'Log file mode enable...'
   
       end
       
@@ -42,14 +39,27 @@ if n_elements(console_options) gt 0 then begin
       
       ; Enable quiet mode
       strlowcase(tag) eq 'quiet' : begin
-        self.print, 2, 'Quiet mode enable'
+        self.print, 2, 'Quiet mode enable...'
         self.Consolesetup = 2
 ;        print, codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)'
         
       end
       
-      strlowcase(tag) eq 'verbose': self.print, 2, 'verbose mode enable'
+      strlowcase(tag) eq 'verbose': self.print, 2, 'verbose mode enable...'
       
+      strlowcase(tag) eq 'gui': begin
+        self.print, 2, 'GUI mode enable...'
+        self.Consolesetup = 4
+        dum= where(strlowcase(tags) eq 'wid', /NULL)
+
+        if dum ne !NULL then begin
+          self.wID = console_options.wid
+        endif else begin
+          self.print, 2, 'No widgetID provided specified...'
+          self.print, 2, "The output is redirected to the console..."
+        endelse
+          
+       end
       
       else : begin
 ;        self.print, 2, "Was looking at statement " + tag
@@ -87,27 +97,27 @@ Pro consoleclass::help
 End
 
 
-; Function to output information on GUI console
-Pro consoleclass::printLog, pointerState, code, stringText
-
-codeString = ["::","INFO","WARNING","ERROR"]
-tempString = string(codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)')
-
-widget_control, (*pointerState).wtLog, set_value=tempString, /APPEND
-
-End
-
-; Function to output array information on GUI console
-Pro consoleclass::printLogArray, pointerState, code, stringArray
-
-  codeString = ["::","INFO","WARNING","ERROR"]
-
-  n = n_elements(stringArray)
-  stringFormat= '(a-7,tr1,a2,tr3,'+string(n)+'(a, :, ", "))'
-  s = STRING(codeString[code], codeString[0], stringArray, FORMAT = stringFormat)
-  widget_control, (*pointerState).wtLog, set_value=s, /APPEND
-
-End
+;; Function to output information on GUI console
+;Pro consoleclass::printLog, pointerState, code, stringText
+;
+;codeString = ["::","INFO","WARNING","ERROR"]
+;tempString = string(codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)')
+;
+;widget_control, (*pointerState).wtLog, set_value=tempString, /APPEND
+;
+;End
+;
+;; Function to output array information on GUI console
+;Pro consoleclass::printLogArray, pointerState, code, stringArray
+;
+;  codeString = ["::","INFO","WARNING","ERROR"]
+;
+;  n = n_elements(stringArray)
+;  stringFormat= '(a-7,tr1,a2,tr3,'+string(n)+'(a, :, ", "))'
+;  s = STRING(codeString[code], codeString[0], stringArray, FORMAT = stringFormat)
+;  widget_control, (*pointerState).wtLog, set_value=s, /APPEND
+;
+;End
 
 
 
@@ -127,6 +137,8 @@ Pro consoleclass::Progress, code, n, m
     0:Print, FORMAT='(%"%s", a-7,tr1,a2,tr1, %"%d job process over %d...",$)', string(13b), codeString[code], codeString[0], n, m
     1:
     2:
+    3:
+    4:
   endcase
   
 End
@@ -146,9 +158,18 @@ case self.consoleSetup of
 0:print, codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)'
 1:printf, self.consoleLun, codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)'
 2:
+3:
+4: begin
+    if self.wID ne 9999 then begin
+      tempString = string(codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)')
+      widget_control, self.wID, set_value=tempString, /APPEND
+    endif else begin
+      self.consoleSetup = 0
+      self.print, code, stringText
+    endelse
+  end
+
 endcase
-
-
 
 End
 
@@ -169,6 +190,17 @@ case self.consoleSetup of
 0:print, FORMAT = stringFormat, codeString[code], codeString[0], stringArray
 1:printf, self.consoleLun, codeString[code], codeString[0], stringArray, FORMAT = stringFormat
 2:
+3:
+4:begin
+    if self.wID ne 9999 then begin
+      s = STRING(codeString[code], codeString[0], stringArray, FORMAT = stringFormat)
+      widget_control, self.wID, set_value=s, /APPEND
+    endif else begin
+      self.consoleSetup = 0
+      self.printArray, code, stringArray
+    endelse
+    
+  end
 endcase
 
 
@@ -211,6 +243,17 @@ Pro consoleclass::printLUT, code, array, thres
         0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
         1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
         2:
+        3:
+        4:begin
+            if self.wID ne 9999 then begin
+              s = STRING(codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat)
+              widget_control, self.wID, set_value=s, /APPEND
+            endif else begin
+              self.consoleSetup = 0
+              self.printLUT, code, array, thres
+            endelse
+            
+          end
       endcase
     
     endfor
@@ -232,6 +275,16 @@ Pro consoleclass::printLUT, code, array, thres
         0:Print, FORMAT = stringFormat, codeString[code], codeString[0], Array[*,i]
         1:Printf, self.Consolelun, codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat
         2:
+        3:
+        4: begin
+            if self.wID ne 9999 then begin
+              s = STRING(codeString[code], codeString[0], Array[*,i], FORMAT = stringFormat)
+              widget_control, self.wID, set_value=s, /APPEND
+            endif else begin
+              self.consoleSetup = 0
+              self.printLUT, code, array, thres
+            endelse
+           end
       endcase
 
     endfor
@@ -243,6 +296,18 @@ Pro consoleclass::printLUT, code, array, thres
       0:Print, FORMAT = stringFormat, codeString[code], codeString[0], tempr
       1:Printf, self.Consolelun, codeString[code], codeString[0], tempr, FORMAT = stringFormat
       2:
+      3:
+      4:begin
+          if self.wID ne 9999 then begin
+            s = STRING(codeString[code], codeString[0], tempr, FORMAT = stringFormat)
+            widget_control, self.wID, set_value=s, /APPEND
+          endif else begin
+            self.consoleSetup = 0
+            self.printLUT, code, array, thres
+          endelse
+          
+        end
+      
     endcase
 
     
@@ -253,6 +318,7 @@ Pro consoleclass::printLUT, code, array, thres
 End
 
 Pro consoleclass::printsep
+
 
 self.print,1,'========================================================='
 
@@ -276,6 +342,15 @@ Function consoleclass::restoreMode
 End
 
 
+Function consoleclass::setwID, wID = wID
+
+  self.consoleSetup = 4
+  self.wID = wID
+  return, 1
+
+End
+
+
 
 Pro consoleclass__define
 
@@ -286,7 +361,8 @@ Pro consoleclass__define
     consoleSetup     :0B, $             ; Execution information output, 0:console,1:file,3:quiet
     previousMode     :0B,$
     logPath          :'', $             ; Path the to log file
-    consoleLun       :0B  $             ; Path to the LAS file
+    consoleLun       :0B, $             ; Path to the LAS file
+    wID              :0 $                ; Widget ID
   }
 
 End
