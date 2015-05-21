@@ -192,6 +192,18 @@ Function pointarrayclass_sazerac::extractPoint, pointId
 End
 
 
+
+Function pointarrayclass_sazerac::extractMultiplePoint, pointId
+
+    Return, pointarrayclass_sazerac($
+      (*self.pt)[pointId,0] ,$
+      (*self.pt)[pointId,1] ,$
+      (*self.pt)[pointId,2] $
+      )
+
+End
+
+
 Function pointarrayclass_sazerac::findmin, $
                                                   INDEX = INDEX, $
                                                   X = X, Y = Y, Z = Z
