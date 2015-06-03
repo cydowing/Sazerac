@@ -247,10 +247,12 @@ Function bboxclass_sazerac::offset, point
 End
 
 
-Function bboxclass_sazerac::returnCornerAsArray
+Function bboxclass_sazerac::returnCornerAsArray, FLEURDELAS = FLEURDELAS
+
   ta = (self.ptMin).xyz()
   tb = (self.ptMax).xyz()
-  return, [ta, tb]
+  ; Fleurdelas bbox formating -> [xMax, xMin, yMax, yMin, zMax, zMin]
+  if keyword_set(FLEURDELAS) then return, [tb[0],ta[0],tb[1],ta[1],tb[2],ta[2]] else return, [ta, tb]
   
 End
 
@@ -300,8 +302,8 @@ End
 Pro bboxclass_sazerac__define
 
   void = {bboxclass_sazerac, $
-    ptMin   : pointclass_sazerac ,$
-    ptMax   : pointclass_sazerac $
+    ptMin   : pointclass_sazerac() ,$
+    ptMax   : pointclass_sazerac() $
   }
 
 End
