@@ -205,8 +205,9 @@ End
 
 
 Function pointarrayclass_sazerac::findmin, $
-                                                  INDEX = INDEX, $
-                                                  X = X, Y = Y, Z = Z
+                                      INDEX = INDEX, $
+                                      VALUE = VALUE, $
+                                      X = X, Y = Y, Z = Z
 
 if keyword_set(X) then range = 0
 if keyword_set(Y) then range = 1
@@ -214,6 +215,7 @@ if keyword_set(Z) then range = 2
 
 dum = min( (*self.pt)[*,range], minSub )
 
+if keyword_set(VALUE) then return, dum
 if keyword_set(INDEX) then return, minsub else return, pointclass_sazerac(self.xyz(minSub))
 
 
@@ -222,6 +224,7 @@ End
 
 Function pointarrayclass_sazerac::findmax, $
   INDEX = INDEX, $
+  VALUE = VALUE, $
   X = X, Y = Y, Z = Z
 
   if keyword_set(X) then range = 0
@@ -230,8 +233,25 @@ Function pointarrayclass_sazerac::findmax, $
 
   dum = max( (*self.pt)[*,range], maxSub )
 
+  if keyword_set(VALUE) then return, dum
   if keyword_set(INDEX) then return, maxsub else return, pointclass_sazerac(self.xyz(maxSub))
 
+
+End
+
+
+Function pointarrayclass_sazerac::getBoundingBox
+
+ULx = self.findmax(/VALUE, /X)
+ULy = self.findmax(/VALUE, /Y)
+ULz = self.findmax(/VALUE, /Z)
+pointUL = pointclass_sazerac(ULx, ULy, ULz)
+LRx = self.findmin(/VALUE, /X)
+LRy = self.findmin(/VALUE, /Y)
+LRz = self.findmin(/VALUE, /Z)
+pointLR = pointclass_sazerac(LRx, LRy, LRz)
+
+Return, bboxclass_sazerac(pointUL, pointLR)
 
 End
 
