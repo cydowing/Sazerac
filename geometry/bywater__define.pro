@@ -27,9 +27,18 @@ End
 
 
 
-Function byWater::getNumberOfSegment
+Function byWater::getFirstSegment
 
-  Return, N_elements(*self.N)
+  nSamples = (*self.n)[1]
+  samples = (*self.pulse)[(*self.n)[0]:(*self.n)[0]+nSamples-1]
+  time = (*self.durAnchor)[1]
+  luTable = *self.luTable
+
+  time = indgen(nSamples) + time
+  coordinates = self.tracePulse(time)
+  intensity = luTable[samples]
+
+  Return, {coor:coordinates, int:intensity}
 
 End
 
@@ -37,55 +46,70 @@ End
 
 Function byWater::getLastSegment
 
-  n = self.getNumberOfSegment()
-  nSamples = (*self.N)[n-1]
-  samples = (*self.Pulse)[-nSamples:*]
-  time = (*self.Duranchor)[n-1]
-  luTable = *self.Lutable
+n = self.getNumberOfSegment()
+nSamples = (*self.n)[n-1]
+samples = (*self.pulse)[-nSamples:*]
+time = (*self.durAnchor)[n-1]
+luTable = *self.luTable
 
-  time = Indgen(nSamples) + time
-  coordinates = self.tracePulse(time)
-  intensity = luTable[samples]
+time = indgen(nSamples) + time
+coordinates = self.tracePulse(time)
+intensity = luTable[samples]
 
-  Return, {coor:coordinates, int:intensity}
-
-End
-
-
-Function byWater::getFirstSegment
-
-  nSamples = (*self.N)[1]
-  samples = (*self.Pulse)[(*self.N)[0]:(*self.N)[0]+nSamples-1]
-  time = (*self.Duranchor)[1]
-  luTable = *self.Lutable
-
-  time = Indgen(nSamples) + time
-  coordinates = self.tracePulse(time)
-  intensity = luTable[samples]
-
-  Return, {coor:coordinates, int:intensity}
+Return, {coor:coordinates, int:intensity}
 
 End
 
 
 
-Function byWater::getSegmentNumber, n
+Function byWater::getNthSegment, n
 
-  nSamples = (*self.N)[n]
+  nSamples = (*self.n)[n]
   if n eq 0 then begin
-    samples = (*self.Pulse)[0:nSamples-1]
+    samples = (*self.pulse)[0:nSamples-1]
   endif else begin
-    samples = (*self.Pulse)[(*self.N)[n-1]:(*self.N)[n-1]+nSamples-1]
+    samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
   endelse
-  time = (*self.Duranchor)[n]
-  luTable = *self.Lutable
+  time = (*self.durAnchor)[n]
+  luTable = *self.luTable
 
-  time = Indgen(nSamples) + time
+  time = indgen(nSamples) + time
   coordinates = self.tracePulse(time)
   intensity = luTable[samples]
 
   Return, {coor:coordinates, int:intensity}
-  Return, 1
+
+End
+
+
+; TODO : issue with the array of structure formating
+Function byWater::getAllSegments
+
+  nSeg = self.getNumberOfSegment()
+  luTable = *(self.luTable)
+  
+  for n = 0, nSeg-1 do begin
+
+    nSamples = (*self.n)[n]
+    if n eq 0 then begin
+      samples = (*self.pulse)[0:nSamples-1]
+    endif else begin
+      samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
+    endelse
+    time = (*self.durAnchor)[n]
+;    luTable = *(self.luTable)
+
+    time = indgen(nSamples) + time
+    coordinates = self.tracePulse(time)
+    intensity = luTable[samples]
+
+    temp = {res, coor:coordinates, int:intensity} 
+
+    if n eq 0 then resCombo = temp else resComb = [resComb, temp]
+
+  endfor
+  
+  Return, temp
 
 End
 
