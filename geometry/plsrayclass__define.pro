@@ -111,9 +111,19 @@ Function plsrayclass::getPulse
 End
 
 
-;Function plsrayclass::getNumberOfSegment
+
+;Function plsrayclass::getFirstSegment
 ;
-;return, n_elements(*self.n)
+;  nSamples = (*self.n)[1]
+;  samples = (*self.pulse)[(*self.n)[0]:(*self.n)[0]+nSamples-1]
+;  time = (*self.durAnchor)[1]
+;  luTable = *self.luTable
+;
+;  time = indgen(nSamples) + time
+;  coordinates = self.tracePulse(time)
+;  intensity = luTable[samples]
+;
+;  Return, {coor:coordinates, int:intensity}
 ;
 ;End
 ;
@@ -136,24 +146,8 @@ End
 ;End
 ;
 ;
-;Function plsrayclass::getFirstSegment
 ;
-;  nSamples = (*self.n)[1]
-;  samples = (*self.pulse)[(*self.n)[0]:(*self.n)[0]+nSamples-1]
-;  time = (*self.durAnchor)[1]
-;  luTable = *self.luTable
-;
-;  time = indgen(nSamples) + time
-;  coordinates = self.tracePulse(time)
-;  intensity = luTable[samples]
-;
-;  Return, {coor:coordinates, int:intensity}
-;
-;End
-;
-;
-;
-;Function plsrayclass::getSegmentNumber, n
+;Function plsrayclass::getNthSegment, n
 ;
 ;  nSamples = (*self.n)[n]
 ;  if n eq 0 then begin
@@ -169,110 +163,40 @@ End
 ;  intensity = luTable[samples]
 ;
 ;  Return, {coor:coordinates, int:intensity}
-;  Return, 1
 ;
 ;End
-
-
-
-
-
-Function plsrayclass::getFirstSegment
-
-  nSamples = (*self.n)[1]
-  samples = (*self.pulse)[(*self.n)[0]:(*self.n)[0]+nSamples-1]
-  time = (*self.durAnchor)[1]
-  luTable = *self.luTable
-
-  time = indgen(nSamples) + time
-  coordinates = self.tracePulse(time)
-  intensity = luTable[samples]
-
-  Return, {coor:coordinates, int:intensity}
-
-End
-
-
-
-Function plsrayclass::getLastSegment
-
-n = self.getNumberOfSegment()
-nSamples = (*self.n)[n-1]
-samples = (*self.pulse)[-nSamples:*]
-time = (*self.durAnchor)[n-1]
-luTable = *self.luTable
-
-time = indgen(nSamples) + time
-coordinates = self.tracePulse(time)
-intensity = luTable[samples]
-
-Return, {coor:coordinates, int:intensity}
-
-End
-
-
-
-Function plsrayclass::getNthSegment, n
-
-  nSamples = (*self.n)[n]
-  if n eq 0 then begin
-    samples = (*self.pulse)[0:nSamples-1]
-  endif else begin
-    samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
-  endelse
-  time = (*self.durAnchor)[n]
-  luTable = *self.luTable
-
-  time = indgen(nSamples) + time
-  coordinates = self.tracePulse(time)
-  intensity = luTable[samples]
-
-  Return, {coor:coordinates, int:intensity}
-
-End
-
-
-; TODO : issue with the array of structure formating
-Function plsrayclass::getAllSegments
-
-  nSeg = self.getNumberOfSegment()
-  luTable = *(self.luTable)
-  
-  for n = 0, nSeg-1 do begin
-
-    nSamples = (*self.n)[n]
-    if n eq 0 then begin
-      samples = (*self.pulse)[0:nSamples-1]
-    endif else begin
-      samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
-    endelse
-    time = (*self.durAnchor)[n]
-;    luTable = *(self.luTable)
-
-    time = indgen(nSamples) + time
-    coordinates = self.tracePulse(time)
-    intensity = luTable[samples]
-
-    temp = {res, coor:coordinates, int:intensity} 
-
-    if n eq 0 then resCombo = temp else resComb = [resComb, temp]
-
-  endfor
-  
-  Return, temp
-
-End
-
-
-
-Function plsrayclass::createChild
-
-  child = plsrayclass()
-  child.time = self.time
-  child.depth = self.depth + 1
-  return, child
-  
-End
+;
+;
+;; TODO : issue with the array of structure formating
+;Function plsrayclass::getAllSegments
+;
+;  nSeg = self.getNumberOfSegment()
+;  luTable = *(self.luTable)
+;  
+;  for n = 0, nSeg-1 do begin
+;
+;    nSamples = (*self.n)[n]
+;    if n eq 0 then begin
+;      samples = (*self.pulse)[0:nSamples-1]
+;    endif else begin
+;      samples = (*self.pulse)[(*self.n)[n-1]:(*self.n)[n-1]+nSamples-1]
+;    endelse
+;    time = (*self.durAnchor)[n]
+;;    luTable = *(self.luTable)
+;
+;    time = indgen(nSamples) + time
+;    coordinates = self.tracePulse(time)
+;    intensity = luTable[samples]
+;
+;    temp = {res, coor:coordinates, int:intensity} 
+;
+;    if n eq 0 then resCombo = temp else resComb = [resComb, temp]
+;
+;  endfor
+;  
+;  Return, temp
+;
+;End
 
 
 

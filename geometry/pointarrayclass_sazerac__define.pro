@@ -37,6 +37,9 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
   endcase
   
   ; Initializing the object
+  bbPoints = self.getBoundingBox(/POINTS)
+  dum = self.bboxclass_sazerac::init(bbPoints[0], bbPoints[1])
+  
   return, 1
   
 End
@@ -240,7 +243,7 @@ Function pointarrayclass_sazerac::findmax, $
 End
 
 
-Function pointarrayclass_sazerac::getBoundingBox
+Function pointarrayclass_sazerac::getBoundingBox, POINTS = POINTS
 
 ULx = self.findmax(/VALUE, /X)
 ULy = self.findmax(/VALUE, /Y)
@@ -251,9 +254,18 @@ LRy = self.findmin(/VALUE, /Y)
 LRz = self.findmin(/VALUE, /Z)
 pointLR = pointclass_sazerac(LRx, LRy, LRz)
 
-Return, bboxclass_sazerac(pointUL, pointLR)
+if Keyword_set(POINTS) then Return, [pointUL, pointLR] else Return, bboxclass_sazerac(pointUL, pointLR)
 
 End
+
+
+Function pointarrayclass_sazerac::worldBound, POINTS = POINTS
+
+ if Keyword_set(POINTS) then Return, self.getBoundingBox(/POINTS) else $
+                             Return, self.getBoundingBox()
+
+End
+
 
 
 Function pointarrayclass_sazerac::findaverage, $
@@ -413,9 +425,10 @@ End
 Pro pointarrayclass_sazerac__define
 
   void = {pointarrayclass_sazerac, $
-    pt       : ptr_new() ,$  ; pointer to the points array store as fltarr(n,3)
-    column   : 0UL        ,$  ; number of columns in the array
-    row      : 0          $  ; number of rows in the array
+    pt       : ptr_new()       ,$     ; pointer to the points array store as fltarr(n,3)
+    column   : 0UL             ,$     ; number of columns in the array
+    row      : 0               ,$     ; number of rows in the array
+    inherits bboxclass_sazerac $      ; Inherance of the bboclass
   }
 
 End

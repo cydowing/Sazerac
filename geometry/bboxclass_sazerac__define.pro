@@ -1,6 +1,6 @@
 Function bboxclass_sazerac::init, inOne, inTwo
 
-  Compile_opt idl2
+  Compile_opt idl2, HIDDEN
   
 ;  if strlowcase(obj_class(inOne)) ne 'pointclass_sazerac' then begin
 ;    print, 'Please provide a point class object (pointclass_sazerac) for the first argument...'
@@ -294,7 +294,12 @@ Function bboxclass_sazerac::intersectP, ray, hitt0, hitt1
   if (t0 gt t1) then return, 0
   
   endfor
+  
+  if (hitt0) then hitt0 = t0
+  if (hitt1) then hitt1 = t1
 
+  return, 1
+  
 End
 
 
