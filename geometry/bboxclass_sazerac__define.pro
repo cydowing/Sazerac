@@ -176,7 +176,8 @@ Function bboxclass_sazerac::pad, vector2
     dum = (self.ptMax).addVector(vector2)
   endelse
   
-  return, self
+  return, 1
+;  return, self
 
 End
 
