@@ -25,7 +25,7 @@ Function bvhaccelclass_sazerac::init, primitiveArray, mp, splitMethod
   endcase 
     
   ; Initialize _buildData_ array for primitives
-  infoArray = replicate(self.BVHPrimitiveInfo(), n_elements(primitiveArray))
+  infoArray = replicate(initBVHPrimitiveInfo_sazerac(), n_elements(primitiveArray))
   
   loopFlag = 0UL
   while loopFlag lt n_elements(primitiveArray) do begin
