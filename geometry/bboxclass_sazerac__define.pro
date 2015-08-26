@@ -108,6 +108,16 @@ Function bboxclass_sazerac::unionWithPoint, point
 End
 
 
+Function bboxclass_sazerac::centroid
+
+ta = (self.ptMin).xyz()
+tb = (self.ptMax).xyz()
+  
+return, pointclass_sazerac(0.5 * (ta + tb))
+
+End
+
+
 Function bboxclass_sazerac::unionWithBox, box
 
   if obj_class(box) ne strupcase('bboxclass_sazerac') then begin
@@ -211,7 +221,7 @@ End
 Function bboxclass_sazerac::maximumExtend
 
   diag = (self.ptMin).makeVector(self.ptMax)
-  if diag.x() lt diag.y() and diag.x() gt diag.z() then return, 0
+  if diag.x() gt diag.y() and diag.x() gt diag.z() then return, 0
   if diag.y() gt diag.z() then return, 1 else return, 2
   
 End
@@ -302,7 +312,6 @@ Function bboxclass_sazerac::intersectP, ray, hitt0, hitt1
   return, 1
   
 End
-
 
 
 Pro bboxclass_sazerac__define
