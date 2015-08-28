@@ -92,15 +92,13 @@ Function bboxclass_sazerac::unionWithPoint, point
     print, 'Please provide a point class object (pointclass_sazerac)...'
     return, 0
   endif else begin
-    newbox = bboxclass_sazerac
     tminX = ( (self.ptMin).x() < point.x() )
     tminY = ( (self.ptMin).y() < point.y() )
     tminZ = ( (self.ptMin).z() < point.z() )
     tmaxX = ( (self.ptMax).x() > point.x() )
     tmaxY = ( (self.ptMax).y() > point.y() )
     tmaxZ = ( (self.ptMax).z() > point.z() )
-    dum = newbox.setptMin( pointclass_sazerac( tminX, tminY, tminZ ) )
-    dum = newbox.setPtMax( pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
+    newbox = bboxclass_sazerac(pointclass_sazerac( tminX, tminY, tminZ ),pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
   endelse
   
   return, newbox
@@ -124,15 +122,13 @@ Function bboxclass_sazerac::unionWithBox, box
     print, 'Please provide a bounding box class object (bboxclass_sazerac)...'
     return, 0
   endif else begin
-    newbox = bboxclass_sazerac
     tminX = ( (self.ptMin).x() < (box.getptMin()).x() )
     tminY = ( (self.ptMin).y() < (box.getptMin()).y() )
     tminZ = ( (self.ptMin).z() < (box.getptMin()).z() )
     tmaxX = ( (self.ptMax).x() > (box.getptMax()).x() )
     tmaxY = ( (self.ptMax).y() > (box.getptMax()).y() )
     tmaxZ = ( (self.ptMax).z() > (box.getptMax()).z() )
-    dum = newbox.setptMin( pointclass_sazerac( tminX, tminY, tminZ ) )
-    dum = newbox.setPtMax( pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
+    newbox = bboxclass_sazerac(pointclass_sazerac( tminX, tminY, tminZ ),pointclass_sazerac( tmaxX, tmaxY, tmaxZ ) )
   endelse
   
   return, newbox

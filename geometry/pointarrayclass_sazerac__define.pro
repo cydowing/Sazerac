@@ -416,7 +416,7 @@ End
 Function pointarrayclass_sazerac::transformTo2D
 
   (*self.pt)[*,2] = (*self.pt)[*,2] * 0.D
-  return, 1
+  return, self
   
 End
 
