@@ -15,11 +15,24 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
                 print, 'Make sure that one of the dimension is 3...'
                 return, 0
               endif else begin
-                if (size(cox,/dimensions))[0] gt (size(cox,/dimensions))[1] then begin
-                  self.pt = ptr_new(cox)
-                  self.column = (size(cox,/dimensions))[0]
-                  if n_elements(size(cox,/dimensions)) gt 1 then self.row = (size(cox,/dimensions))[1]
-                endif else self.pt = ptr_new(transpose(cox))
+                rowId = where(size(cox,/dimensions) eq 3, complement = ccomp)
+                ; case the matrix is square -> assume that the input is in the correct order
+                if n_elements(rowId) eq 2 then rowId = 1 & ccomp = 3
+                case rowID of
+                  0: begin
+                        self.pt = ptr_new(transpose(cox))
+                        self.column = ccomp
+                     end
+                  1: begin
+                        self.pt = ptr_new(cox)
+                        self.column = ccomp
+                     end
+                 endcase
+;                if (size(cox,/dimensions))[0] gt (size(cox,/dimensions))[1] then begin
+;                  self.pt = ptr_new(cox)
+;                  self.column = (size(cox,/dimensions))[0]
+;                  if n_elements(size(cox,/dimensions)) gt 1 then self.row = (size(cox,/dimensions))[1]
+;                endif else self.pt = ptr_new(transpose(cox))
               endelse
             endelse
         end
@@ -216,8 +229,10 @@ if keyword_set(X) then range = 0
 if keyword_set(Y) then range = 1
 if keyword_set(Z) then range = 2
 
-dum = min( (*self.pt)[*,range], minSub )
 
+if n_elements(size((*self.pt),/DIMENSIONS)) eq 1 then dum = min( (*self.pt)[range], minSub ) else $
+                                                      dum = min( (*self.pt)[*,range], minSub )
+  
 if keyword_set(VALUE) then return, dum
 if keyword_set(INDEX) then return, minsub else return, pointclass_sazerac(self.xyz(minSub))
 
@@ -234,7 +249,8 @@ Function pointarrayclass_sazerac::findmax, $
   if keyword_set(Y) then range = 1
   if keyword_set(Z) then range = 2
 
-  dum = max( (*self.pt)[*,range], maxSub )
+  if n_elements(size((*self.pt),/DIMENSIONS)) eq 1 then dum = max( (*self.pt)[range], maxSub ) else $
+                                                        dum = max( (*self.pt)[*,range], maxSub )
 
   if keyword_set(VALUE) then return, dum
   if keyword_set(INDEX) then return, maxsub else return, pointclass_sazerac(self.xyz(maxSub))
@@ -405,10 +421,40 @@ Function pointarrayclass_sazerac::makeVectorArrayStackFromPointArray, point2
 End
 
 
+Function pointarrayclass_sazerac::distanceFromPointArray, vecBobj
+
+vecA = (*self.pt)
+vecB = vecBobj.xyz()
+
+;dVecA = size(vecA, /DIMENSIONS)
+;dVecB = size(vecB, /DIMENSIONS)
+dVecA = self.getDim()
+dVecB = vecBobj.getDim()
+
+
+;  a = indgen(2,3)+23
+aa = rebin((reform(transpose(VecA),1,dVecA[1],dVecA[0])),dVecB[0],dVecA[1],dVecA[0])
+
+;  b = indgen(4,3)-3
+bb = rebin(vecB, dVecB[0],dVecB[1],dVecA[0])
+
+cc = (aa - bb)^2
+
+tt = sqrt(total(cc,2))
+mm = min(tt, minSub, DIMENSION = 1)
+
+minDistIndex = minSub - (indgen(dVeca[0])*dvecB[0])
+
+return, minDistIndex
+
+
+End
+
+
 
 Function pointarrayclass_sazerac::getDim
 
-  return, n_elements((*self.pt)[*,0])
+  return, [n_elements((*self.pt)[*,0]),3]
   
 End
 
