@@ -1,13 +1,13 @@
-Function plsrayclass::init, orig, dir, pulse
+Function plsrayclass::init, orig, dir
 
   Compile_opt idl2
   
   self.origin = orig
   self.direction = dir
-  self.n = pulse.n
-  self.pulse = pulse.pulse
-  self.durAnchor = pulse.durationFromAnchor
-  self.luTable = pulse.lut
+;  self.n = pulse.n
+;  self.pulse = pulse.pulse
+;  self.durAnchor = pulse.durationFromAnchor
+;  self.luTable = pulse.lut
  
   ; Call consoleclass superclass Initialization method.
   dum = self->consoleclass::init()
@@ -43,29 +43,29 @@ Function plsrayclass::setDirection, vector2
 End
 
 
-Function plsrayclass::setDurAnchor, value
-
-  self.durAnchor = value
-  return, 1
-  
-End
-
-
-Function plsrayclass::setLuTable, value
-
-  self.luTable = value
-  return, 1
-  
-End
-
-
-
-Function plsrayclass::setN, value
-
-  self.n = value
-  Return, 1
-
-End
+;Function plsrayclass::setDurAnchor, value
+;
+;  self.durAnchor = value
+;  return, 1
+;  
+;End
+;
+;
+;Function plsrayclass::setLuTable, value
+;
+;  self.luTable = value
+;  return, 1
+;  
+;End
+;
+;
+;
+;Function plsrayclass::setN, value
+;
+;  self.n = value
+;  Return, 1
+;
+;End
 
 
 
@@ -83,32 +83,32 @@ Function plsrayclass::getDirection
 End
 
 
-Function plsrayclass::getDurAnchor
-
-  return, self.durAnchor
-  
-End
-
-
-Function plsrayclass::getluTable
-
-  return, self.luTable
-  
-End
-
-
-Function plsrayclass::getN
-
-  return, self.n
-  
-End
-
-
-Function plsrayclass::getPulse
-
-  return, self.pulse
-  
-End
+;Function plsrayclass::getDurAnchor
+;
+;  return, self.durAnchor
+;  
+;End
+;
+;
+;Function plsrayclass::getluTable
+;
+;  return, self.luTable
+;  
+;End
+;
+;
+;Function plsrayclass::getN
+;
+;  return, self.n
+;  
+;End
+;
+;
+;Function plsrayclass::getPulse
+;
+;  return, self.pulse
+;  
+;End
 
 
 
@@ -272,15 +272,6 @@ Pro plsrayclass__define
   void = {plsrayclass, $
     origin    : pointclass_sazerac(),$        ; Origin of the pluse = Anchor point
     direction : vectorclass(),$       ; Direction of the pulse = Normalized Anchor to Target vector
-    n         : ptr_new(),$         ; Pointer to the number of samples per pulse segment,  concatenated into an single array
-    pulse     : ptr_new(),$         ; Pointer to the wavefrom values concatenated together
-    durAnchor : ptr_new(),$         ; Pointer to the Duration from Anchor values, concatenated into an single array
-    luTable   : ptr_new(),$         ; Pointer to the lookup table for the pulse
-    outX      : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
-    outY      : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
-    inX       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
-    inY       : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
-    depth     : 0B, $
     inherits consoleclass $
   }
 

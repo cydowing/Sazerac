@@ -72,13 +72,17 @@
 ; :Author: antoine
 ;-
 Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
-                              ORIGIN = ORIGIN, DIRECTION = DIRECTION, $
                               DFA = DFA, LUT = LUT, NAN = NAN, $
-                              FORMATORIGIN = FORMATORIGIN, MANUFACTURER = MANUFACTURER
+                              FORMATORIGIN = FORMATORIGIN, MANUFACTURER = MANUFACTURER, $
+                              SEGMENTNUMBER = SEGMENTNUMBER
 
     
     
   Compile_opt idl2
+  
+  self.Out = Obj_new('consoleclass')
+  self.plotColor = ["r","b","g","y"]
+  self.plotFlag = 0B
   
 ;  ; Initialize the rayclass - if no arguments are pass then some plain ones are created
 ;  if keyword_set(ORIGIN) and keyword_set(DIRECTION) then begin
@@ -90,34 +94,35 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
 ;  endelse
   
   
-  self.printsep
+  self.Out->printsep
   
-  self.print,1 , 'Creating wavefrom object...'
+  if keyword_set(SEGMENTNUMBER) then self.Out->print,1 , 'Creating wavefrom object for segment #' + strcompress(string(segmentNumber-1), /REMOVE_ALL) + '...' else $
+                                     self.Out->print,1 , 'Creating wavefrom object...'
   
   if not keyword_set(FORMATORIGIN) then FORMATORIGIN = 99
   if not keyword_set(MANUFACTURER) then MANUFACTURER = 99
   
   case FORMATORIGIN of
-    0: fileType = 'LAS'
-    1: fileType = 'PULSEWAVES'
-    2: fileType = 'INW'
+    1: fileType = 'LAS'
+    2: fileType = 'PULSEWAVES'
+    3: fileType = 'INW'
     ELSE: begin
             fileType = 'UNKNOWN'
             formatorigin = 99
           end
   endcase
-  self.print, 1, 'The pulse originated from ' + fileType + ' file...'
+  self.Out->print, 1, 'The pulse originated from ' + fileType + ' file...'
   self.formatOrigin = FORMATORIGIN
   
   case MANUFACTURER of
-    0: manufac = 'OPTECH'
     1: manufac = 'RIEGL'
+    2: manufac = 'OPTECH'
     ELSE: begin
       manufac = 'UNKNOWN'
       manufacturer = 99
     end
   endcase
-  self.print, 1, 'The pulse originated from ' + manufac + ' system...'
+  self.Out->print, 1, 'The pulse originated from ' + manufac + ' system...'
   self.scanManufact = MANUFACTURER
   
   if keyword_set(WAVE) then self.Wave = Ptr_new(WAVE) else self.wave = ptr_new(!NULL)
@@ -135,9 +140,9 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
     endcase
   endelse
   
-  self.print, 1, 'The pulse has ' + strcompress(self.nSamples, /REMOVE_ALL) + ' samples...'
+  self.Out->print, 1, 'The pulse has ' + strcompress(self.nSamples, /REMOVE_ALL) + ' samples...'
   
-  self.printsep
+  self.Out->printsep
    
   Return, 1
 
@@ -258,7 +263,7 @@ End
 ;-
 Function waveformclass::n
 
-  Return, *self.nSamples
+  Return, self.nSamples
 
 End
 
@@ -341,7 +346,7 @@ End
 ;
 ; :Author: antoine
 ;-
-Function waveformclass::origin, value
+Function waveformclass::originFileType, value
 
   if N_elements(value) eq 0 then begin
     Return, self.formatOrigin
@@ -469,8 +474,8 @@ case N_elements(b) of
   2:begin
     
       if keyword_set(XAXIS) eq 0 and keyword_set(YAXIS) eq 0 then begin
-        self.print, 3, 'Missing keyword to properly crop the waveform...'
-        self.print, 3, 'Please specify if we need to crop among the X or Y axe...'
+        self.Out->print, 3, 'Missing keyword to properly crop the waveform...'
+        self.Out->print, 3, 'Please specify if we need to crop among the X or Y axe...'
         return, 0
       end
     
@@ -491,8 +496,8 @@ case N_elements(b) of
 
       if Keyword_set(XMIN) eq 0 and Keyword_set(XMAX) eq 0 and $
          Keyword_set(YMIN) eq 0 and Keyword_set(YMAX) eq 0 then begin
-        self.print, 3, 'Missing keyword to properly crop the waveform...'
-        self.print, 3, 'Please specify if we need to crop among the X or Y axe...'
+        self.Out->print, 3, 'Missing keyword to properly crop the waveform...'
+        self.Out->print, 3, 'Please specify if we need to crop among the X or Y axe...'
         Return, 0
       end    
 
@@ -526,7 +531,7 @@ case N_elements(b) of
 endcase
 
 if keyword_set(apply) then begin
-  self.print, 3, 'The original wavefrom has been overwrite...'
+  self.Out->print, 3, 'The original wavefrom has been overwrite...'
   self.wave = ptr_new(newWave)
 endif
 
@@ -562,9 +567,9 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
 
 
   case self.formatOrigin of
-    0: newWave = *self.wave
     1: newWave = (*(self.lut))[(*(self.wave))]
     2: newWave = inw_logAmpOptimize(*self.wave)
+    3: newWave = *self.wave
     99: newWave = *self.wave
     ELSE:
   endcase
@@ -572,10 +577,10 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
   
   if Keyword_set(FILTER) then begin
     if keyword_set(NANVALUE) then begin
-      self.print, 2, 'The wavefrom his filtered by a provided NAN value...'
+      self.Out->print, 2, 'The wavefrom his filtered by a provided NAN value...'
       filterValue = NANVALUE 
     endif else begin
-      self.print, 2, 'The wavefrom his filtered by its own NAN value...'
+      self.Out->print, 2, 'The wavefrom his filtered by its own NAN value...'
       filterValue = *self.NANValue
     endelse
     
@@ -586,7 +591,7 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
   
   
   if keyword_set(APPLY) then begin
-    self.print, 2, 'The original wavefrom has been overwrite...'
+    self.Out->print, 2, 'The original wavefrom has been overwrite...'
     self.wave = ptr_new(newWave)
   endif
 
@@ -638,6 +643,30 @@ End
 
 
 
+Function waveformclass::plotwave, OVERPLOT = OVERPLOT, COLORINDEX = COLORINDEX
+
+
+  if keyword_set(OVERPLOT) or self.plotFlag gt 0 then begin
+    
+    newWave = (*(self.lut))[(*(self.wave))]
+    plt = plot((where(newWave ne *self.NANValue))+dFAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag], /OVERPLOT)
+    self.plotFlag += 1B
+    
+  endif else begin
+    
+    newWave = (*(self.lut))[(*(self.wave))]
+    plp = plot((where(newWave ne *self.NANValue))+ self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag])
+    self.plotFlag += 1B
+    
+  endelse
+   
+
+Return, 1
+
+End
+
+
+
 Pro waveformclass__define
 
   ; Definition of the data hold by the object
@@ -647,12 +676,17 @@ Pro waveformclass__define
     durationFromAnchor  : 0U, $                 ; Sample offset to the segment
     LUT                 : ptr_new(), $          ; Pointer to the lookup table for the pulse
     NANValue            : ptr_new(), $          ; pointer to the NAN value associated to the file type and/or manufacturer
+    plotColor           : strarr(4), $
+    plotFlag            : 0B, $
     samplingInfo        : ptr_new(), $          ; Pointer to the sampling information associated with the wave
     formatOrigin        : 0B, $                 ; bit flag describing wave origin : 0 (LAS), 1 (PULSEWAVES), 2 (INW)
     scanManufact        : 0B, $                 ; bit flag describing system manufacturer : 0 (Optech), 1 (Riegl)
+    outX                : ptr_new(),$         ; Array of the time values for the OUTGOING pulse
+    outY                : ptr_new(),$         ; Array of the energy/amplitude of the OUTGOING pulse
+    inX                 : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
+    inY                 : ptr_new(),$         ; Array of the time values for the RETURNING pulse - note if multiple segement, then it will be an array of structure
     points              : ptr_new(),$           ; Pointer to a structure that holds the trougths and peaks of the waveform
-;    inherits plsrayclass, $                    ; inherits rayclass data and methodes
-    inherits consoleclass $                     ; inherits consoleclass data and methodes
+    out                 : obj_new() $           ; inherits consoleclass data and methodes
   }
 
 

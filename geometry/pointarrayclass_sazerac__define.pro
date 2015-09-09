@@ -61,7 +61,8 @@ End
 Pro pointarrayclass_sazerac::cleanup
 
   Compile_opt idl2
-  
+  ptr_free, self.pt
+;  dum = self.bboxclass_sazerac::cleanup()
     
 End
 
@@ -194,16 +195,17 @@ End
 
 Function pointarrayclass_sazerac::extractPoint, pointId
 
-  if pointId ge self.column then begin
-    print, 'Column value outside of data range...'
-    return, 0
-  endif else begin
+;  if n_elements(pointId) gt 1 then maxPtId = max
+;  if pointId ge self.column then begin
+;    print, 'Column value outside of data range...'
+;    return, 0
+;  endif else begin
     return, pointclass_sazerac($
                       self.coordinateValueByIndex(pointId,0) ,$
                       self.coordinateValueByIndex(pointId,1) ,$
                       self.coordinateValueByIndex(pointId,2)  $
                       )
-  endelse
+;  endelse
   
 End
 
@@ -421,7 +423,7 @@ Function pointarrayclass_sazerac::makeVectorArrayStackFromPointArray, point2
 End
 
 
-Function pointarrayclass_sazerac::distanceFromPointArray, vecBobj
+Function pointarrayclass_sazerac::minDistanceFromPointArray, vecBobj
 
 vecA = (*self.pt)
 vecB = vecBobj.xyz()
@@ -438,10 +440,15 @@ aa = rebin((reform(transpose(VecA),1,dVecA[1],dVecA[0])),dVecB[0],dVecA[1],dVecA
 ;  b = indgen(4,3)-3
 bb = rebin(vecB, dVecB[0],dVecB[1],dVecA[0])
 
-cc = (aa - bb)^2
+cc = (temporary(aa) - temporary(bb))^2
 
-tt = sqrt(total(cc,2))
-mm = min(tt, minSub, DIMENSION = 1)
+aa = 0
+bb = 0
+
+tt = sqrt(total(temporary(cc),2))
+cc = 0
+mm = min(temporary(tt), minSub, DIMENSION = 1)
+tt = 0
 
 minDistIndex = minSub - (indgen(dVeca[0])*dvecB[0])
 
@@ -449,6 +456,44 @@ return, minDistIndex
 
 
 End
+
+
+
+Function pointarrayclass_sazerac::DistanceFromPointArray, vecBobj, RADIUS = RADIUS
+
+  vecA = (*self.pt)
+  vecB = vecBobj.xyz()
+
+  ;dVecA = size(vecA, /DIMENSIONS)
+  ;dVecB = size(vecB, /DIMENSIONS)
+  dVecA = self.getDim()
+  dVecB = vecBobj.getDim()
+
+
+  ;  a = indgen(2,3)+23
+  aa = rebin((reform(transpose(VecA),1,dVecA[1],dVecA[0])),dVecB[0],dVecA[1],dVecA[0])
+
+  ;  b = indgen(4,3)-3
+  bb = rebin(vecB, dVecB[0],dVecB[1],dVecA[0])
+
+  cc = (temporary(aa) - temporary(bb))^2
+
+  aa = 0
+  bb = 0
+
+  tt = sqrt(total(temporary(cc),2))
+  cc = 0
+  
+  disID = where(temporay(tt) le RADIUS, /NULL)
+  tt = 0
+
+  minDistIndex = disID - (indgen(dVeca[0])*dvecB[0])
+
+  return, minDistIndex
+
+
+End
+
 
 
 
