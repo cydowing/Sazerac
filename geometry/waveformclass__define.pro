@@ -315,7 +315,7 @@ End
 ;-
 Function waveformclass::lut
 
-  Return, *(self.lut)
+  if ptr_valid(self.lut) then Return, *(self.lut) else return, !NULL
 
 End
 

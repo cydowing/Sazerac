@@ -35,9 +35,17 @@ End
 
 
 
+Function byWater::getOutputSegment
+
+  Return, self.computeSegment(0)
+
+End
+
+
+
 Function byWater::getFirstSegment
 
-  return, self.computeSegment(0)
+  return, self.computeSegment(1)
 
 End
 
