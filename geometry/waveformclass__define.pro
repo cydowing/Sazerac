@@ -80,7 +80,7 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
     
   Compile_opt idl2
   
-  self.Out = Obj_new('consoleclass')
+  self.Out = Obj_new('consoleclass', /Quiet)
   self.plotColor = ["r","b","g","y"]
   self.plotFlag = 0B
   
@@ -189,6 +189,14 @@ Function waveformclass::cleanup
 
 End
 
+
+
+
+Function waveformclass::getNanValue
+
+return, self.NANValue
+
+End
 
 
 ;+
@@ -576,15 +584,9 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
   
   
   if Keyword_set(FILTER) then begin
-    if keyword_set(NANVALUE) then begin
-      self.Out->print, 2, 'The wavefrom his filtered by a provided NAN value...'
-      filterValue = NANVALUE 
-    endif else begin
-      self.Out->print, 2, 'The wavefrom his filtered by its own NAN value...'
-      filterValue = *self.NANValue
-    endelse
     
-    isIndex = where(newWave ne filterValue, COMPLEMENT = COMPLEMENT, /NULL)
+    
+    isIndex = where(newWave ne NANVALUE, COMPLEMENT = COMPLEMENT, /NULL)
     newWave[COMPLEMENT] = min(newWave[isIndex])
     
   endif
@@ -627,13 +629,21 @@ End
 ;
 ; :Author: antoine
 ;-
-Function waveformclass::findPoint, THRES = THRES, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL
+Function waveformclass::findPoint, THRES = THRES, NANVALUE = NANVALUE, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL
 
+  if keyword_set(NANVALUE) then begin
+    self.Out->print, 2, 'The wavefrom his filtered by a provided NAN value...'
+    filterValue = NANVALUE
+  endif else begin
+    self.Out->print, 2, 'The wavefrom his filtered by its own NAN value...'
+    filterValue = *self.NANValue
+  endelse
+  
   ; Apply any amplification and filtering to get a proper signal
-  if keyword_set(THRES) then ampliWave = self.ampli(/FILTER, NANVALUE = THRES) else ampliWave = self.ampli(/FILTER)
+  if keyword_set(THRES) then ampliWave = self.ampli(/FILTER, NANVALUE = filterValue) else ampliWave = self.ampli(/FILTER)
   
   ; Calling the pointocator function to extract the points
-  pointResult = pointocator(ampliWave, THRES = THRES, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL)
+  pointResult = pointocator(ampliWave, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL)
   ; Updating the internal data field
   self.points = ptr_new(pointResult)
   ; Returning the result
