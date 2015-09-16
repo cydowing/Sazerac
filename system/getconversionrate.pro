@@ -24,28 +24,29 @@ endif
 ;from = 'USD'
 ;to = 'EUR'
 
-; Creating the URL
-url = strcompress('http://rate-exchange.appspot.com/currency?from=' + strupcase(string(from)) + '&to=' + strupcase(string(to)), /remove_all)
-
-; Creating a temp file to store the information
-os = os_define()
-tempConversionRateFile = strcompress(os.home + os.sep + 'currencyRate.txt', /REMOVE_ALL)
-
-netObject = Obj_New('IDLnetURL')
-void = netObject -> Get(URL=url, FILENAME=tempConversionRateFile)
-Obj_Destroy, netObject
-  
-; Opening the temp file
-openr, lun, tempConversionRateFile, /GET_LUN
-line = ''
-readf, lun, line
-free_lun, lun, /FORCE
-
-; Parsing the line to get the information
-lead = STRPOS(line, '"rate": ')
-tail = STRPOS(line, ', "from":')
-rate = STRMID(line, lead+strlen('"rate": '), tail-lead-strlen('"rate": '))
+;; Creating the URL
+;url = strcompress('http://rate-exchange.appspot.com/currency?from=' + strupcase(string(from)) + '&to=' + strupcase(string(to)), /remove_all)
+;
+;; Creating a temp file to store the information
+;os = os_define()
+;tempConversionRateFile = strcompress(os.home + os.sep + 'currencyRate.txt', /REMOVE_ALL)
+;
+;netObject = Obj_New('IDLnetURL')
+;void = netObject -> Get(URL=url, FILENAME=tempConversionRateFile)
+;Obj_Destroy, netObject
+;  
+;; Opening the temp file
+;openr, lun, tempConversionRateFile, /GET_LUN
+;line = ''
+;readf, lun, line
+;free_lun, lun, /FORCE
+;
+;; Parsing the line to get the information
+;lead = STRPOS(line, '"rate": ')
+;tail = STRPOS(line, ', "from":')
+;rate = STRMID(line, lead+strlen('"rate": '), tail-lead-strlen('"rate": '))
  
+ rate = 1.
 return, double(rate)
  
  End

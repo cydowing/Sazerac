@@ -348,6 +348,13 @@ Function pointarrayclass_sazerac::distance, point
 End
 
 
+Function pointarrayclass_sazerac::verticalDistance, point
+
+  return, abs( (*self.pt)[*,2] - point.z() )
+
+End
+
+
 
 Function pointarrayclass_sazerac::orthogonalDistance, origin, vector
 

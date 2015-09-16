@@ -575,9 +575,9 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
 
 
   case self.formatOrigin of
-    1: newWave = (*(self.lut))[(*(self.wave))]
-    2: newWave = inw_logAmpOptimize(*self.wave)
-    3: newWave = *self.wave
+    1: newWave = *self.wave
+    2: newWave = (*(self.lut))[(*(self.wave))]
+    3: newWave = inw_logAmpOptimize(*self.wave)
     99: newWave = *self.wave
     ELSE:
   endcase
