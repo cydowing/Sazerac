@@ -82,7 +82,7 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
   
   self.Out = Obj_new('consoleclass', /Quiet)
   self.plotColor = ["r","b","g","y"]
-  self.plotFlag = 0B
+  IF Keyword_set(SEGMENTNUMBER) then self.plotFlag = SEGMENTNUMBER else self.plotflag = 0B
   
 ;  ; Initialize the rayclass - if no arguments are pass then some plain ones are created
 ;  if keyword_set(ORIGIN) and keyword_set(DIRECTION) then begin
@@ -98,6 +98,7 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
   
   if keyword_set(SEGMENTNUMBER) then self.Out->print,1 , 'Creating wavefrom object for segment #' + strcompress(string(segmentNumber-1), /REMOVE_ALL) + '...' else $
                                      self.Out->print,1 , 'Creating wavefrom object...'
+;  if Keyword_set(SEGMENTNUMBER) then self.plotFlag = SEGMENTNUMBER
   
   if not keyword_set(FORMATORIGIN) then FORMATORIGIN = 99
   if not keyword_set(MANUFACTURER) then MANUFACTURER = 99
@@ -656,16 +657,16 @@ End
 Function waveformclass::plotwave, OVERPLOT = OVERPLOT, COLORINDEX = COLORINDEX
 
 
-  if keyword_set(OVERPLOT) or self.plotFlag gt 0 then begin
+  if keyword_set(OVERPLOT) or self.plotFlag gt 1 then begin
     
     newWave = (*(self.lut))[(*(self.wave))]
-    plt = plot((where(newWave ne *self.NANValue))+dFAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag], /OVERPLOT)
+    plt = plot((where(newWave ne *self.NANValue))+self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag-1], /OVERPLOT)
     self.plotFlag += 1B
     
   endif else begin
     
     newWave = (*(self.lut))[(*(self.wave))]
-    plp = plot((where(newWave ne *self.NANValue))+ self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag])
+    plp = plot((where(newWave ne *self.NANValue))+ self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag-1])
     self.plotFlag += 1B
     
   endelse
