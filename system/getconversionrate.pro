@@ -25,7 +25,7 @@ endif
 ;to = 'EUR'
 
 ; Creating the URL
-url = strcompress('http://rate-exchange.appspot.com/currency?from=' + strupcase(string(from)) + '&to=' + strupcase(string(to)), /remove_all)
+url = strcompress('http://api.fixer.io/latest?symbols=' + strupcase(string(from)) + ',' + strupcase(string(to)), /remove_all)
 
 ; Creating a temp file to store the information
 os = os_define()
@@ -42,9 +42,10 @@ readf, lun, line
 free_lun, lun, /FORCE
 
 ; Parsing the line to get the information
-lead = STRPOS(line, '"rate": ')
-tail = STRPOS(line, ', "from":')
-rate = STRMID(line, lead+strlen('"rate": '), tail-lead-strlen('"rate": '))
+lead = STRPOS(line, '"rates":{')
+tail = STRPOS(line, '}}', /REVERSE_SEARCH)
+interimString = '"rates":{' + '"' + strupcase(string(to)) + '":'
+rate = STRMID(line, lead+strlen(interimString), tail-lead-strlen(interimString))
  
 return, double(rate)
  
