@@ -39,7 +39,7 @@ if n_elements(console_options) gt 0 then begin
       
       ; Enable quiet mode
       strlowcase(tag) eq 'quiet' : begin
-        self.print, 2, 'Quiet mode enable...'
+;        self.print, 2, 'Quiet mode enable...'
         self.Consolesetup = 2
 ;        print, codeString[code], codeString[0], stringText, format = '(a-7,tr1,a2,tr1,a-255)'
         

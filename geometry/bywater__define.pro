@@ -66,7 +66,7 @@ Function byWater::getNthSegment, n
     self.print, 3, 'Segment number outside of the available segments...'
     return, 0
   endif
-  n = self.nWaveform - 1
+;  n = self.nWaveform - 1
   return, self.computeSegment(n)
 
 End
@@ -79,7 +79,7 @@ Function byWater::computeSegment, n
   time = ((*self.waveform)[n]).durationFromAnchor()
   luTable = ((*self.waveform)[n]).lut()
 
-  time = indgen(nSamples) + time
+  time = indgen(nSamples, /UL64) + time
   coordinates = self.tracePulse(time)
   intensity = luTable[samples]
 

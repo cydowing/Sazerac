@@ -138,11 +138,11 @@ End
 
 Function pointarrayclass_sazerac::coordinateValueByIndex, i, j
   
-  if i ge self.column then begin
-    print, 'Column value outside of data range...'
-    return, 0
-  endif
-  
+;  if i[*] ge self.column then begin
+;    print, 'Column value outside of data range...'
+;    return, 0
+;  endif
+;  
   if j ge self.row then begin
     print, 'Row value outside of data range...'
     return, 0
@@ -345,6 +345,13 @@ Function pointarrayclass_sazerac::distance, point
 
   return, sqrt( self.sqrtDistance(point))
   
+End
+
+
+Function pointarrayclass_sazerac::verticalDistance, point
+
+  return, abs( (*self.pt)[*,2] - point.z() )
+
 End
 
 

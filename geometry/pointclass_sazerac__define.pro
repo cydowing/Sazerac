@@ -125,6 +125,13 @@ Function pointclass_sazerac::distance, point
 End
 
 
+Function pointclass_sazerac::verticalDistance, point
+
+  return, abs(self.z - point.z())
+  
+End
+
+
 Function pointclass_sazerac::orthogonalDistance, origin, vector
 
   vec = self.makeVector(origin)

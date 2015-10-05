@@ -80,9 +80,9 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
     
   Compile_opt idl2
   
-  self.Out = Obj_new('consoleclass')
+  self.Out = Obj_new('consoleclass', /Quiet)
   self.plotColor = ["r","b","g","y"]
-  self.plotFlag = 0B
+  IF Keyword_set(SEGMENTNUMBER) then self.plotFlag = SEGMENTNUMBER else self.plotflag = 0B
   
 ;  ; Initialize the rayclass - if no arguments are pass then some plain ones are created
 ;  if keyword_set(ORIGIN) and keyword_set(DIRECTION) then begin
@@ -98,6 +98,7 @@ Function waveformclass::init, WAVE = WAVE, NSAMPLES = NSAMPLES, $
   
   if keyword_set(SEGMENTNUMBER) then self.Out->print,1 , 'Creating wavefrom object for segment #' + strcompress(string(segmentNumber-1), /REMOVE_ALL) + '...' else $
                                      self.Out->print,1 , 'Creating wavefrom object...'
+;  if Keyword_set(SEGMENTNUMBER) then self.plotFlag = SEGMENTNUMBER
   
   if not keyword_set(FORMATORIGIN) then FORMATORIGIN = 99
   if not keyword_set(MANUFACTURER) then MANUFACTURER = 99
@@ -189,6 +190,14 @@ Function waveformclass::cleanup
 
 End
 
+
+
+
+Function waveformclass::getNanValue
+
+return, self.NANValue
+
+End
 
 
 ;+
@@ -567,24 +576,18 @@ Function waveformclass::ampli, APPLY = APPLY, FILTER = FILTER, NANVALUE = NANVAL
 
 
   case self.formatOrigin of
-    1: newWave = (*(self.lut))[(*(self.wave))]
-    2: newWave = inw_logAmpOptimize(*self.wave)
-    3: newWave = *self.wave
+    1: newWave = *self.wave
+    2: newWave = (*(self.lut))[(*(self.wave))]
+    3: newWave = inw_logAmpOptimize(*self.wave)
     99: newWave = *self.wave
     ELSE:
   endcase
   
   
   if Keyword_set(FILTER) then begin
-    if keyword_set(NANVALUE) then begin
-      self.Out->print, 2, 'The wavefrom his filtered by a provided NAN value...'
-      filterValue = NANVALUE 
-    endif else begin
-      self.Out->print, 2, 'The wavefrom his filtered by its own NAN value...'
-      filterValue = *self.NANValue
-    endelse
     
-    isIndex = where(newWave ne filterValue, COMPLEMENT = COMPLEMENT, /NULL)
+    
+    isIndex = where(newWave ne NANVALUE, COMPLEMENT = COMPLEMENT, /NULL)
     newWave[COMPLEMENT] = min(newWave[isIndex])
     
   endif
@@ -627,13 +630,21 @@ End
 ;
 ; :Author: antoine
 ;-
-Function waveformclass::findPoint, THRES = THRES, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL
+Function waveformclass::findPoint, THRES = THRES, NANVALUE = NANVALUE, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL
 
+  if keyword_set(NANVALUE) then begin
+    self.Out->print, 2, 'The wavefrom his filtered by a provided NAN value...'
+    filterValue = NANVALUE
+  endif else begin
+    self.Out->print, 2, 'The wavefrom his filtered by its own NAN value...'
+    filterValue = *self.NANValue
+  endelse
+  
   ; Apply any amplification and filtering to get a proper signal
-  if keyword_set(THRES) then ampliWave = self.ampli(/FILTER, NANVALUE = THRES) else ampliWave = self.ampli(/FILTER)
+  if keyword_set(THRES) then ampliWave = self.ampli(/FILTER, NANVALUE = filterValue) else ampliWave = self.ampli(/FILTER)
   
   ; Calling the pointocator function to extract the points
-  pointResult = pointocator(ampliWave, THRES = THRES, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL)
+  pointResult = pointocator(ampliWave, SIMPLIFY = SIMPLIFY, NOSMOOTH = NOSMOOTH, ADD_TAIL = ADD_TAIL)
   ; Updating the internal data field
   self.points = ptr_new(pointResult)
   ; Returning the result
@@ -646,16 +657,16 @@ End
 Function waveformclass::plotwave, OVERPLOT = OVERPLOT, COLORINDEX = COLORINDEX
 
 
-  if keyword_set(OVERPLOT) or self.plotFlag gt 0 then begin
+  if keyword_set(OVERPLOT) or self.plotFlag gt 1 then begin
     
     newWave = (*(self.lut))[(*(self.wave))]
-    plt = plot((where(newWave ne *self.NANValue))+dFAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag], /OVERPLOT)
+    plt = plot((where(newWave ne *self.NANValue))+self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag-1], /OVERPLOT)
     self.plotFlag += 1B
     
   endif else begin
     
     newWave = (*(self.lut))[(*(self.wave))]
-    plp = plot((where(newWave ne *self.NANValue))+ self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag])
+    plp = plot((where(newWave ne *self.NANValue))+ self.durationFromAnchor, newWave[where(newWave ne *self.NANValue)], color=(self.plotColor)[self.plotFlag-1])
     self.plotFlag += 1B
     
   endelse

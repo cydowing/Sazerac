@@ -20,10 +20,6 @@ if not keyword_set(FROM) then begin
   return, 0
 endif
 
-;  http://rate-exchange.appspot.com/currency?from=USD&to=EUR
-;from = 'USD'
-;to = 'EUR'
-
 ; Creating the URL
 url = strcompress('http://api.fixer.io/latest?symbols=' + strupcase(string(from)) + ',' + strupcase(string(to)), /remove_all)
 
