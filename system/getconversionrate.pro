@@ -4,7 +4,11 @@
 ;
 ; Author: Antoine Cottin
 ;              Carbomap Ltd
-;              11/02.2015
+;              
+; History: 11/02/2015 - initial development
+;          02/11/2015 - updated the url as previous one didn't exist anymore
+;          07/11/2015 - delet temp file that holds the conversion rates
+;          
 ;-
 Function getConversionRate, FROM = FROM, TO = TO
 
@@ -37,12 +41,14 @@ line = ''
 readf, lun, line
 free_lun, lun, /FORCE
 
+file_delete, tempConversionRateFile
+
 ; Parsing the line to get the information
 lead = STRPOS(line, '"rates":{')
 tail = STRPOS(line, '}}', /REVERSE_SEARCH)
 interimString = '"rates":{' + '"' + strupcase(string(to)) + '":'
 rate = STRMID(line, lead+strlen(interimString), tail-lead-strlen(interimString))
- 
+
 return, double(rate)
  
  End
