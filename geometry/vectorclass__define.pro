@@ -189,6 +189,12 @@ Function vectorclass::opposite
 
 End
 
+Function vectorclass::oppositeZ
+
+  return, [self.vx, self.vy, -self.vz]
+
+End
+
 
 Function vectorclass::length
 
