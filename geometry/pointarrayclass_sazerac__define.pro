@@ -75,8 +75,6 @@ Function pointarrayclass_sazerac::x, id
   
   endif else begin
     
-;    if id ge self.getDim() then print, 'Provided dimension too big...'
-    
     return, (*self.pt)[id,0]
     
   endelse
