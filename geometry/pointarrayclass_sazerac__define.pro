@@ -501,6 +501,11 @@ End
 
 
 
+Function pointarrayclass_sazerac::numberOfElements
+
+  return, n_elements((*self.pt)[*,0])
+
+End
 
 Function pointarrayclass_sazerac::getDim
 
