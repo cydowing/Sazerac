@@ -2,6 +2,7 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
 
   Compile_opt idl2
   
+  
   case n_params() of
     0 : begin
           
@@ -10,22 +11,26 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
             if cox eq !NULL then begin
               self.pt = ptr_new(cox)
             endif else begin
-              if (size(cox,/dimensions))[0] ne 3 and (size(cox,/dimensions))[1] ne 3 then begin
+              coxSize = (size(cox,/dimensions))
+              if coxSize[0] ne 3 and coxSize[1] ne 3 then begin
                 print, 'Wrong size of input data...'
                 print, 'Make sure that one of the dimension is 3...'
                 return, 0
               endif else begin
-                rowId = where(size(cox,/dimensions) eq 3, complement = ccomp)
+                rowId = where( coxSize eq 3, complement = ccomp)
                 ; case the matrix is square -> assume that the input is in the correct order
-                if n_elements(rowId) eq 2 then rowId = 1 & ccomp = 3
+                if rowId eq ccomp then begin
+                  rowId = 1
+                  ccomp = 3
+                endif
                 case rowID of
                   0: begin
                         self.pt = ptr_new(transpose(cox))
-                        self.column = ccomp
+                        self.column = coxSize[ccomp]
                      end
                   1: begin
                         self.pt = ptr_new(cox)
-                        self.column = ccomp
+                        self.column = coxSize[ccomp]
                      end
                  endcase
 ;                if (size(cox,/dimensions))[0] gt (size(cox,/dimensions))[1] then begin
@@ -42,7 +47,7 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
             if size(coz, /N_DIMENSIONS) ne 1 then coz = transpose(coz)
              ; It is the user duty to provid columns major array coordinates
              self.pt = ptr_new( [[cox],[coy],[coz]] )
-             self.column = (size(cox,/dimensions))[0]
+             self.column = coxSize[0]
              self.row = 3
         end
     else : print, ' pointarrayclass_sazerac - Wrong number of elements for initialization...'
