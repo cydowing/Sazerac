@@ -42,6 +42,7 @@ Function pointarrayclass_sazerac::init, cox, coy, coz
             endelse
         end
     3 : begin
+            coxsize = size(cox,/dimensions)
             if size(cox, /N_DIMENSIONS) ne 1 then cox = transpose(cox)
             if size(coy, /N_DIMENSIONS) ne 1 then coy = transpose(coy)
             if size(coz, /N_DIMENSIONS) ne 1 then coz = transpose(coz)
@@ -334,6 +335,26 @@ Function pointarrayclass_sazerac::subVector, vector
   (*self.pt)[*,2] -= vector.z()
   return, 1
   
+End
+
+
+Function pointarrayclass_sazerac::multiVector, vector
+
+  (*self.pt)[*,0] *= vector.x()
+  (*self.pt)[*,1] *= vector.y()
+  (*self.pt)[*,2] *= vector.z()
+  return, 1
+
+End
+
+
+Function pointarrayclass_sazerac::divVector, vector
+
+  (*self.pt)[*,0] /= vector.x()
+  (*self.pt)[*,1] /= vector.y()
+  (*self.pt)[*,2] /= vector.z()
+  return, 1
+
 End
 
 
